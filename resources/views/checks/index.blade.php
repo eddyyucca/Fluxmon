@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">{{ __('Checks') }} <span class="text-sm font-normal text-slate-500">· {{ $router->name }}</span></x-slot>
 
-    @php $manage = auth()->user()->hasPermission('alerts.manage'); @endphp
+    @php $manage = auth()->user()->hasPermission('alerts.manage', $router); @endphp
 
     <p class="muted mb-4">{{ __('A check tests whether something is reachable every minute and raises an alert when it stops answering. "Ping from router" asks the router itself (for example: can it reach its ISP gateway?); "TCP port" is tested from the Fluxmon server.') }}</p>
 
@@ -45,7 +45,7 @@
                                 </form>
                                 <form method="POST" action="{{ route('r.checks.destroy', [$router, $c]) }}" class="inline" onsubmit="return confirm(@js(__('Remove this check?')))">
                                     @csrf @method('DELETE')
-                                    <button class="btn-ghost btn-sm !text-red-600"><x-icon name="trash" class="h-4 w-4" /></button>
+                                    <button class="btn-ghost btn-sm !text-red-700 dark:!text-red-400"><x-icon name="trash" class="h-4 w-4" /></button>
                                 </form>
                             @endif
                         </td>

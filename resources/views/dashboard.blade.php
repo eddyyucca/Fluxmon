@@ -1,8 +1,10 @@
 <x-app-layout>
     <x-slot name="header">{{ __('Dashboard') }}</x-slot>
-    <x-slot name="actions">
-        <a href="{{ route('routers.create') }}" class="btn-primary btn-sm"><x-icon name="plus" class="h-4 w-4" /> {{ __('Add router') }}</a>
-    </x-slot>
+    @if (auth()->user()->hasPermission('routers.manage'))
+        <x-slot name="actions">
+            <a href="{{ route('routers.create') }}" class="btn-primary btn-sm"><x-icon name="plus" class="h-4 w-4" /> {{ __('Add router') }}</a>
+        </x-slot>
+    @endif
 
     @if ($routers->isEmpty())
         <div class="card card-pad mx-auto max-w-lg text-center">
@@ -10,7 +12,9 @@
             <h2 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">{{ __('Welcome to Fluxmon') }}</h2>
             <p class="muted mt-1">{{ __('Connect your first MikroTik router to start monitoring and selling vouchers.') }}</p>
             <div class="mt-5 flex flex-wrap justify-center gap-2">
-                <a href="{{ route('routers.create') }}" class="btn-primary">{{ __('Add your first router') }}</a>
+                @if (auth()->user()->hasPermission('routers.manage'))
+                    <a href="{{ route('routers.create') }}" class="btn-primary">{{ __('Add your first router') }}</a>
+                @endif
                 <a href="{{ route('docs', 'getting-started') }}" class="btn-secondary">{{ __('Read the guide') }}</a>
             </div>
         </div>
@@ -20,7 +24,8 @@
             <a href="{{ route('alerts') }}" class="alert-err flex items-center gap-2"><x-icon name="bolt" class="h-4 w-4 shrink-0" /> {{ $a->title }} <span class="ml-auto text-xs opacity-70">{{ $a->started_at->diffForHumans() }}</span></a>
         @endforeach
 
-        {{-- Revenue --}}
+        @if ($combined)
+        {{-- Revenue: everything in one, for the superadmin --}}
         <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
             @foreach ([
                 [__('Revenue today'), \App\Support\Fmt::money($today['revenue'], $currency)],
@@ -46,10 +51,23 @@
             </div>
         </div>
 
+        @endif
+
         {{-- Routers --}}
         <h3 class="mb-3 mt-8 text-sm font-semibold text-slate-500 uppercase tracking-wide">{{ __('Routers') }}</h3>
         <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
             @foreach ($routers as $router)
+                @if (! in_array($router->id, $unlocked))
+                    <div class="card card-pad flex items-center gap-4">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"><x-icon name="key" /></span>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate font-semibold text-slate-900 dark:text-white" title="{{ $router->name }}">{{ $router->name }}</div>
+                            <div class="text-xs text-slate-500">{{ $router->host }}</div>
+                        </div>
+                        <a href="{{ route('r.login', $router) }}" class="btn-primary btn-sm shrink-0 whitespace-nowrap">{{ __('Sign in to this device') }}</a>
+                    </div>
+                    @continue
+                @endif
                 <div class="card card-pad" x-data="routerStats('{{ route('dashboard.stats', $router) }}')" x-init="load(); setInterval(() => load(), 10000)">
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
@@ -59,7 +77,7 @@
                         <span :class="s === null ? 'badge-gray' : (s.ok ? 'badge-green' : 'badge-red')" x-text="s === null ? '{{ __('Checking') }}' : (s.ok ? '{{ __('Online') }}' : '{{ __('Offline') }}')"></span>
                     </div>
 
-                    <p x-show="s && !s.ok" x-cloak class="mt-4 text-sm text-red-600 dark:text-red-400" x-text="s && s.message"></p>
+                    <p x-show="s && !s.ok" x-cloak class="mt-4 line-clamp-3 break-words text-sm text-red-700 dark:text-red-400" :title="s && s.message" x-text="s && s.message"></p>
 
                     <div x-show="s && s.ok" x-cloak class="mt-4 space-y-4">
                         <p class="muted"><span x-text="s && s.board"></span> · RouterOS <span x-text="s && s.version"></span> · <span x-text="s && s.uptime"></span></p>
@@ -95,7 +113,7 @@
                     @foreach ($recent as $log)
                         <li class="flex items-center justify-between gap-4 px-5 py-2.5 text-sm sm:px-6">
                             <span class="min-w-0 truncate"><span class="font-medium">{{ $log->user?->name ?? '—' }}</span> <span class="text-slate-500">{{ $log->action }}</span> {{ $log->details }}</span>
-                            <span class="shrink-0 text-xs text-slate-400">{{ $log->created_at->diffForHumans() }}</span>
+                            <span class="shrink-0 text-xs text-slate-500">{{ $log->created_at->diffForHumans() }}</span>
                         </li>
                     @endforeach
                 </ul>

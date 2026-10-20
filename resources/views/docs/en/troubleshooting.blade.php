@@ -37,7 +37,17 @@
 </ul>
 
 <h2>A menu or page is missing</h2>
-<p>Your role does not include it (see <a href="{{ route('docs', 'accounts') }}">Accounts and roles</a>), or your account is limited to other routers. Ask an admin.</p>
+<p>Your role does not include it (see <a href="{{ route('docs', 'accounts') }}">Accounts and roles</a>). Staff only get the menus their <em>device account</em> allows, and only after signing in to the device. Ask a superadmin or administrator.</p>
+
+<h2>I cannot sign in to a device</h2>
+<ul>
+    <li>Use the <strong>device account</strong> of that device, not your Fluxmon login. Every device has its own.</li>
+    <li>The username and password must belong to <em>this</em> device; an account made for another device does not work here.</li>
+    <li>After 5 wrong attempts within a minute the device is locked for you for a short while. Wait and try again.</li>
+    <li>The account may be switched off. A superadmin or administrator can check it under <em>Device accounts</em> on that device and set a new password.</li>
+    <li>If the device does not appear for you at all, your Fluxmon account is limited to other devices.</li>
+    <li>Signed in but sent back to the sign-in page? Device sign-ins end after 8 idle hours.</li>
+</ul>
 
 <h2>I forgot the admin password</h2>
 <p>Someone with access to the server can set a new one. In the Fluxmon folder run:</p>

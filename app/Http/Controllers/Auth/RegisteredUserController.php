@@ -36,13 +36,13 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Registration is only open until the first account exists, and that one is the admin.
+        // Registration is only open until the first account exists, and that one is the superadmin.
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        $user->forceFill(['role' => 'admin'])->save();
+        $user->forceFill(['role' => 'superadmin'])->save();
 
         event(new Registered($user));
 

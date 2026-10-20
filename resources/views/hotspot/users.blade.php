@@ -108,15 +108,15 @@
                                         @elseif ($u['online']) <span class="badge-green">{{ __('Online') }}</span>
                                         @else <span class="badge-gray">{{ __('Idle') }}</span> @endif
                                     </td>
-                                    <td class="text-slate-600 dark:text-slate-400">{{ $u['uptime'] }}@if ($u['limit_uptime']) <span class="text-slate-400">/ {{ $u['limit_uptime'] }}</span>@endif</td>
+                                    <td class="text-slate-600 dark:text-slate-400">{{ $u['uptime'] }}@if ($u['limit_uptime']) <span class="text-slate-500">/ {{ $u['limit_uptime'] }}</span>@endif</td>
                                     <td class="whitespace-nowrap text-slate-600 dark:text-slate-400">
                                         {{ \App\Support\RouterOs::bytes($u['bytes_in'] + $u['bytes_out']) }}
-                                        @if ($u['limit_bytes']) <span class="text-slate-400">/ {{ \App\Support\RouterOs::bytes($u['limit_bytes']) }}</span> @endif
+                                        @if ($u['limit_bytes']) <span class="text-slate-500">/ {{ \App\Support\RouterOs::bytes($u['limit_bytes']) }}</span> @endif
                                     </td>
                                     <td class="whitespace-nowrap text-right">
                                         <button type="button" class="btn-ghost btn-sm" @click="one('{{ $u['disabled'] ? 'enable' : 'disable' }}', @js($u['id']))">{{ $u['disabled'] ? __('Enable') : __('Disable') }}</button>
                                         <button type="button" class="btn-ghost btn-sm" @click="one('reset', @js($u['id']))">{{ __('Reset') }}</button>
-                                        <button type="button" class="btn-ghost btn-sm !text-red-600" @click="one('delete', @js($u['id']), @js(__('Delete this user?')))">{{ __('Delete') }}</button>
+                                        <button type="button" class="btn-ghost btn-sm !text-red-700 dark:!text-red-400" @click="one('delete', @js($u['id']), @js(__('Delete this user?')))">{{ __('Delete') }}</button>
                                     </td>
                                 </tr>
                             @empty

@@ -60,8 +60,12 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('charts', (url, defaultIface) => ({
-                range: '24h', iface: defaultIface, empty: false, hasTemp: false, c: {},
+            Alpine.data('charts', (url, defaultIface) => {
+            // Chart instances are kept out of the component state: Alpine wraps state in a Proxy, which Chart.js cannot draw through.
+            const c = {};
+
+            return {
+                range: '24h', iface: defaultIface, empty: false, hasTemp: false,
 
                 init() {
                     const line = (label, color, fill = false) => ({label, data: [], borderColor: color, backgroundColor: color + '22', fill, tension: .3, pointRadius: 0, borderWidth: 2});
@@ -76,10 +80,10 @@
                         },
                     });
                     const pct = (v) => `${Math.round(v)}%`;
-                    this.c.load = make(this.$refs.load, [line('CPU', '#0284c7'), line('Memory', '#14b8a6')], pct);
-                    this.c.users = make(this.$refs.users, [line('Online', '#10b981', true)], (v) => Math.round(v));
-                    this.c.traffic = make(this.$refs.traffic, [line('Download', '#14b8a6', true), line('Upload', '#0284c7', true)], fmtBits);
-                    this.c.temp = make(this.$refs.temp, [line('°C', '#f59e0b')], (v) => `${v.toFixed(0)}°`);
+                    c.load = make(this.$refs.load, [line('CPU', '#0284c7'), line('Memory', '#14b8a6')], pct);
+                    c.users = make(this.$refs.users, [line('Online', '#10b981', true)], (v) => Math.round(v));
+                    c.traffic = make(this.$refs.traffic, [line('Download', '#14b8a6', true), line('Upload', '#0284c7', true)], fmtBits);
+                    c.temp = make(this.$refs.temp, [line('°C', '#f59e0b')], (v) => `${v.toFixed(0)}°`);
                     this.load();
                     setInterval(() => this.load(), 60000);
                 },
@@ -107,13 +111,14 @@
                         const d = await (await fetch(`${url}?${q}`, {headers: {Accept: 'application/json'}})).json();
                         this.empty = d.cpu.times.length === 0;
                         this.hasTemp = d.temperature.times.length > 0;
-                        this.fill(this.c.load, [d.cpu, d.memory]);
-                        this.fill(this.c.users, [d.hotspot_active]);
-                        this.fill(this.c.traffic, [d.rx, d.tx]);
-                        this.fill(this.c.temp, [d.temperature]);
+                        this.fill(c.load, [d.cpu, d.memory]);
+                        this.fill(c.users, [d.hotspot_active]);
+                        this.fill(c.traffic, [d.rx, d.tx]);
+                        this.fill(c.temp, [d.temperature]);
                     } catch (e) {}
                 },
-            }));
+            };
+        });
         });
     </script>
 </x-app-layout>

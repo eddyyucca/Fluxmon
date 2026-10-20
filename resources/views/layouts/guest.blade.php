@@ -80,7 +80,7 @@
 
                 {{-- Pinned to the bottom of the screen on small devices (the dark panel carries it on large ones). --}}
                 <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
-                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 lg:hidden">
+                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 lg:hidden">
                     <span>{{ __('Developed by') }}</span> <x-fluxa-badge class="!h-5" />
                 </a>
             </div>

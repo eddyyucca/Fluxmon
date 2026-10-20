@@ -113,8 +113,7 @@ class SettingsController extends Controller
         ]);
 
         $user = new User(['name' => $data['name'], 'email' => $data['email'], 'password' => Hash::make($data['password'])]);
-        $user->forceFill(['role' => $data['role'], 'all_routers' => empty($data['router_ids'])])->save();
-        $user->routers()->sync($data['router_ids'] ?? []);
+        $this->applyRole($user, $data['role'], $data['router_ids'] ?? []);
         AuditLog::record('admin.created', "{$user->email} ({$user->role})");
 
         return back()->with('status', __('Account :name added.', ['name' => $user->name]));
@@ -133,11 +132,22 @@ class SettingsController extends Controller
             'router_ids.*' => ['integer', 'exists:routers,id'],
         ]);
 
-        $user->forceFill(['role' => $data['role'], 'all_routers' => empty($data['router_ids'])])->save();
-        $user->routers()->sync($data['router_ids'] ?? []);
+        $this->applyRole($user, $data['role'], $data['router_ids'] ?? []);
         AuditLog::record('admin.updated', "{$user->email} ({$user->role})");
 
         return back()->with('status', __('Account updated.'));
+    }
+
+    /**
+     * Superadmins and administrators always see every device. Only staff can be limited to some,
+     * and those are the devices they may try to sign in to.
+     */
+    private function applyRole(User $user, string $role, array $routerIds): void
+    {
+        $limited = $role === User::STAFF && $routerIds !== [];
+
+        $user->forceFill(['role' => $role, 'all_routers' => ! $limited])->save();
+        $user->routers()->sync($limited ? $routerIds : []);
     }
 
     public function destroyUser(Request $request, User $user): RedirectResponse

@@ -24,13 +24,13 @@
         @else
             <p class="border-b border-slate-100 px-5 py-3 text-sm text-slate-500 dark:border-slate-800">
                 {{ __('Changes since backup #:id', ['id' => $against->id]) }}
-                <span class="ml-2 text-emerald-600">+{{ collect($changes)->where('type', '+')->count() }}</span>
-                <span class="ml-1 text-red-600">−{{ collect($changes)->where('type', '-')->count() }}</span>
+                <span class="ml-2 text-emerald-700 dark:text-emerald-400">+{{ collect($changes)->where('type', '+')->count() }}</span>
+                <span class="ml-1 text-red-700 dark:text-red-400">−{{ collect($changes)->where('type', '-')->count() }}</span>
             </p>
             <div class="max-h-[70vh] overflow-auto font-mono text-xs leading-5">
                 @foreach ($changes as $line)
                     @if ($line['type'] === '…')
-                        <div class="bg-slate-50 px-4 py-0.5 text-slate-400 dark:bg-slate-800/60">⋯</div>
+                        <div class="bg-slate-50 px-4 py-0.5 text-slate-500 dark:bg-slate-800/60">⋯</div>
                     @else
                         <div class="whitespace-pre-wrap break-all px-4 py-0.5 {{ $line['type'] === '+' ? 'bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300' : ($line['type'] === '-' ? 'bg-red-50 text-red-800 dark:bg-red-500/10 dark:text-red-300' : 'text-slate-500') }}"><span class="mr-2 select-none opacity-60">{{ $line['type'] === ' ' ? ' ' : $line['type'] }}</span>{{ $line['text'] }}</div>
                     @endif

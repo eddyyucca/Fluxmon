@@ -60,7 +60,7 @@
                                 <form method="POST" action="{{ route('r.profiles.destroy', [$router, $p['id']]) }}" class="inline" onsubmit="return confirm(@js(__('Delete this profile?')))">
                                     @csrf @method('DELETE')
                                     <input type="hidden" name="name" value="{{ $p['name'] }}">
-                                    <button class="btn-ghost btn-sm !text-red-600">{{ __('Delete') }}</button>
+                                    <button class="btn-ghost btn-sm !text-red-700 dark:!text-red-400">{{ __('Delete') }}</button>
                                 </form>
                             </td>
                         </tr>

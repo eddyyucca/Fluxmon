@@ -139,7 +139,7 @@ class PagesTest extends FluxmonTestCase
 
     public function test_admins_can_be_added_but_not_self_deleted(): void
     {
-        $this->asAdmin()->post('/settings/users', ['name' => 'Eve', 'email' => 'eve@example.com', 'password' => 'a-long-password-1', 'role' => 'viewer'])
+        $this->asAdmin()->post('/settings/users', ['name' => 'Eve', 'email' => 'eve@example.com', 'password' => 'a-long-password-1', 'role' => 'staff'])
             ->assertSessionHas('status');
         $this->assertDatabaseHas('users', ['email' => 'eve@example.com']);
 

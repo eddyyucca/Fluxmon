@@ -51,6 +51,7 @@
             ]];
             $groups[] = [__('Maintenance'), [
                 ['r.backups', 'download', __('Backups'), 'r.backups*', 'backups.manage'],
+                ['r.accounts', 'key', __('Device accounts'), 'r.accounts*', 'accounts.manage'],
             ]];
         }
         $groups[] = [__('Manage'), [
@@ -60,11 +61,18 @@
             ['docs', 'book', __('Documentation'), 'docs*', null],
         ]];
 
+        // A device page needs the right on that device; reports and alerts show when the person holds the
+        // right on at least one device (staff only after signing in to one); the rest is account-wide.
+        $allowed = fn ($i) => $i[4] === null
+            || (str_starts_with($i[0], 'r.')
+                ? $me->hasPermission($i[4], $current)
+                : ($me->hasPermission($i[4]) || (in_array($i[0], ['reports', 'alerts'], true) && $me->canAnywhere($i[4]))));
+
         // Drop what this role may not open, then any group left empty.
         $groups = collect($groups)
             ->map(fn ($g) => [$g[0], array_map(
                 fn ($i) => array_pad($i, 6, null),
-                array_values(array_filter($g[1], fn ($i) => $i[4] === null || $me->hasPermission($i[4]))),
+                array_values(array_filter($g[1], $allowed)),
             )])
             ->filter(fn ($g) => $g[1])->values()->all();
     @endphp
@@ -84,7 +92,7 @@
             @if ($navRouters->isNotEmpty())
                 <div class="px-4 pb-1">
                     <label class="sr-only" for="router-switch">{{ __('Router') }}</label>
-                    <select id="router-switch" class="input" onchange="if (this.value) location.href = this.value">
+                    <select id="router-switch" class="input truncate" title="{{ $current?->name }}" onchange="if (this.value) location.href = this.value">
                         @unless ($current)
                             <option value="">{{ __('Select a router…') }}</option>
                         @endunless
@@ -121,7 +129,7 @@
                     </div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button class="rounded-md p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200" title="{{ __('Log out') }}">
+                        <button class="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200" title="{{ __('Log out') }}">
                             <x-icon name="logout" class="h-[18px] w-[18px]" />
                         </button>
                     </form>
@@ -144,6 +152,14 @@
 
                 @isset($actions) <div class="flex items-center gap-2">{{ $actions }}</div> @endisset
 
+                @if ($current && ! $me->seesAllDevices() && ($deviceAccount = \App\Services\DeviceAccess::accountName($current)))
+                    <form method="POST" action="{{ route('r.logout', $current) }}" class="hidden items-center gap-2 text-xs sm:flex">
+                        @csrf
+                        <span class="muted max-w-[11rem] truncate text-xs" title="{{ __('Signed in to this device as') }} {{ $deviceAccount }}"><x-icon name="key" class="mr-1 inline h-3.5 w-3.5" />{{ $deviceAccount }}</span>
+                        <button class="btn-ghost btn-sm whitespace-nowrap">{{ __('Sign out of device') }}</button>
+                    </form>
+                @endif
+
                 <x-language-switcher />
 
                 <button type="button" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
@@ -156,7 +172,7 @@
             <main class="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
                 @if (session('status')) <div class="alert-ok">{{ session('status') }}</div> @endif
                 @if (session('error')) <div class="alert-err">{{ session('error') }}</div> @endif
-                @if ($errors->any() && ! request()->routeIs('profile.*'))
+                @if ($errors->any() && ! request()->routeIs('profile.*', 'r.login'))
                     <div class="alert-err">
                         <ul class="list-inside list-disc">@foreach ($errors->all() as $e) <li>{{ $e }}</li> @endforeach</ul>
                     </div>
@@ -167,7 +183,7 @@
 
             <footer class="mt-auto border-t border-slate-200 px-4 py-4 dark:border-slate-800 sm:px-6 lg:px-8">
                 <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
-                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
+                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300">
                     <span>{{ __('Developed by') }}</span>
                     <x-fluxa-badge class="!h-5" />
                     <span class="hidden sm:inline">· {{ config('fluxmon.developer.tagline') }}</span>

@@ -17,24 +17,36 @@ class ReportController extends Controller
     public function index(Request $request, ReportService $reports): View|StreamedResponse
     {
         [$from, $to, $filters] = $this->range($request);
+        $user = $request->user();
 
-        // Only routers this account may see; asking for another one is refused.
-        $routers = Router::visibleTo($request->user())->orderBy('name')->get(['id', 'name', 'currency']);
+        // Devices this person may report on: for staff only those they signed in to with a role that allows reports.
+        $allowed = $user->permittedRouterIds('reports.view');
+        $routers = Router::visibleTo($user)
+            ->when($allowed !== null, fn ($q) => $q->whereIn('routers.id', $allowed))
+            ->orderBy('name')->get(['id', 'name', 'currency']);
+
+        // Only the superadmin gets every device folded into one report; everyone else reports on one device at a time.
+        $combinedAllowed = $user->isSuperadmin();
+
         abort_if($filters['router'] && ! $routers->contains('id', $filters['router']), 404);
-        $scope = $filters['router'] ?? $request->user()->limitedRouterIds();
+
+        $chosen = $filters['router'] ?? ($combinedAllowed ? null : $routers->first()?->id);
+        abort_if(! $combinedAllowed && $chosen === null, 403);
+        $filters['router'] = $chosen;
 
         if ($request->query('export') === 'csv') {
-            return $this->export($reports, $from, $to, $scope);
+            return $this->export($reports, $from, $to, $chosen);
         }
 
-        $currency = $routers->firstWhere('id', $filters['router'])?->currency ?? $routers->first()?->currency ?? 'Rp';
+        $currency = $routers->firstWhere('id', $chosen)?->currency ?? $routers->first()?->currency ?? 'Rp';
 
         return view('reports.index', [
-            'summary' => $reports->summary($from, $to, $scope),
+            'summary' => $reports->summary($from, $to, $chosen),
             'filters' => $filters,
             'from' => $from,
             'to' => $to,
             'routers' => $routers,
+            'allowAll' => $combinedAllowed,
             'currency' => $currency,
             'presets' => self::PRESETS,
         ]);
@@ -71,12 +83,12 @@ class ReportController extends Controller
         ]];
     }
 
-    private function export(ReportService $reports, Carbon $from, Carbon $to, int|array|null $scope): StreamedResponse
+    private function export(ReportService $reports, Carbon $from, Carbon $to, ?int $routerId): StreamedResponse
     {
-        return response()->streamDownload(function () use ($reports, $from, $to, $scope) {
+        return response()->streamDownload(function () use ($reports, $from, $to, $routerId) {
             $out = fopen('php://output', 'w');
             fputcsv($out, ['sold_at', 'router', 'username', 'profile', 'price']);
-            foreach ($reports->rows($from, $to, $scope) as $v) {
+            foreach ($reports->rows($from, $to, $routerId) as $v) {
                 fputcsv($out, [$v->first_used_at->format('Y-m-d H:i:s'), $v->router->name, $v->username, $v->profile, $v->price]);
             }
             fclose($out);

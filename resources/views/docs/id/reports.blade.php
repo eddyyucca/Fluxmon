@@ -3,7 +3,7 @@
 <h2>Pilih yang ingin dilihat</h2>
 <ul>
     <li><strong>{{ __('Period') }}:</strong> {{ __('Today') }}, {{ __('Last 7 days') }}, {{ __('Last 30 days') }}, {{ __('This month') }}, {{ __('Last month') }}, atau {{ __('Custom range') }} (isi <em>{{ __('From') }}</em> dan <em>{{ __('To') }}</em>).</li>
-    <li><strong>{{ __('Router') }}:</strong> satu router atau semuanya ({{ __('All routers') }}). Akun yang dibatasi pada router tertentu hanya melihat router itu.</li>
+    <li><strong>{{ __('Router') }}:</strong> perangkat yang dilaporkan. Hanya <strong>superadmin</strong> yang bisa memilih <em>{{ __('All routers') }}</em>, yang menggabungkan semua perangkat menjadi satu laporan. Administrator dan staf selalu melaporkan satu perangkat (staf hanya untuk perangkat yang sedang mereka masuki).</li>
 </ul>
 <p>Tekan <strong>{{ __('Apply') }}</strong> untuk memperbarui.</p>
 

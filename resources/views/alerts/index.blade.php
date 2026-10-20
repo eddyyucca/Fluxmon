@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">{{ __('Alerts') }}</x-slot>
-    @php $manage = auth()->user()->hasPermission('alerts.manage'); @endphp
+    @php $manage = auth()->user()->canAnywhere('alerts.manage'); @endphp
 
     <div class="grid gap-6 xl:grid-cols-5">
         {{-- Events --}}
@@ -30,7 +30,7 @@
             <div class="card overflow-hidden">
                 <div class="flex items-center justify-between px-5 pt-5">
                     <h3 class="card-title">{{ __('Rules') }}</h3>
-                    @if ($manage && auth()->user()->limitedRouterIds() === null)
+                    @if ($manage && $canGlobal)
                         <form method="POST" action="{{ route('alerts.defaults') }}">@csrf
                             <button class="btn-ghost btn-sm">{{ __('Add recommended') }}</button>
                         </form>
@@ -45,13 +45,13 @@
                                     {{ $metrics[$r->metric] ?? $r->metric }} {{ $r->operator }} {{ $r->threshold + 0 }} · {{ $r->duration_minutes }} min · {{ $r->router?->name ?? __('all routers') }}
                                 </div>
                             </div>
-                            @if ($manage)
+                            @if ($manage && ($manageableIds === null || ($r->router_id && in_array($r->router_id, $manageableIds))))
                                 <form method="POST" action="{{ route('alerts.toggle', $r) }}">@csrf
                                     <button class="btn-ghost btn-sm">{{ $r->enabled ? __('Pause') : __('Resume') }}</button>
                                 </form>
                                 <form method="POST" action="{{ route('alerts.destroy', $r) }}" onsubmit="return confirm(@js(__('Remove this rule?')))">
                                     @csrf @method('DELETE')
-                                    <button class="btn-ghost btn-sm !text-red-600"><x-icon name="trash" class="h-4 w-4" /></button>
+                                    <button class="btn-ghost btn-sm !text-red-700 dark:!text-red-400"><x-icon name="trash" class="h-4 w-4" /></button>
                                 </form>
                             @endif
                         </li>
@@ -75,8 +75,8 @@
                     <div>
                         <label class="label">{{ __('Router') }}</label>
                         <select name="router_id" class="input">
-                            @if (auth()->user()->limitedRouterIds() === null) <option value="">{{ __('All routers') }}</option> @endif
-                            @foreach ($routers as $r) <option value="{{ $r->id }}" @selected((int) old('router_id') === $r->id)>{{ $r->name }}</option> @endforeach
+                            @if ($canGlobal) <option value="">{{ __('All routers') }}</option> @endif
+                            @foreach ($routers->when($manageableIds !== null, fn ($c) => $c->whereIn('id', $manageableIds)) as $r) <option value="{{ $r->id }}" @selected((int) old('router_id') === $r->id)>{{ $r->name }}</option> @endforeach
                         </select>
                     </div>
                     <div>

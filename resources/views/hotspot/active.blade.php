@@ -23,7 +23,7 @@
                             <td x-text="s.uptime"></td>
                             <td x-text="fmtBytes(s.bytes_out)"></td>
                             <td x-text="fmtBytes(s.bytes_in)"></td>
-                            <td class="text-right"><button type="button" class="btn-ghost btn-sm !text-red-600" @click="kick(s)">{{ __('Disconnect') }}</button></td>
+                            <td class="text-right"><button type="button" class="btn-ghost btn-sm !text-red-700 dark:!text-red-400" @click="kick(s)">{{ __('Disconnect') }}</button></td>
                         </tr>
                     </template>
                     <tr x-show="loaded && filtered().length === 0" x-cloak><td colspan="7" class="py-10 text-center text-slate-500">{{ __('Nobody is online right now.') }}</td></tr>

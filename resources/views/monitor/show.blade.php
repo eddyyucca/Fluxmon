@@ -30,7 +30,7 @@
         <div class="mb-5 flex items-center gap-2">
             <span :class="s === null ? 'badge-gray' : (s.ok ? 'badge-green' : 'badge-red')" x-text="s === null ? '{{ __('Checking') }}' : (s.ok ? '{{ __('Online') }}' : '{{ __('Offline') }}')"></span>
             <span class="muted" x-show="s && s.ok" x-cloak><span x-text="s && s.board"></span> · RouterOS <span x-text="s && s.version"></span> · {{ __('up') }} <span x-text="s && s.uptime"></span></span>
-            <span class="text-sm text-red-600 dark:text-red-400" x-show="s && !s.ok" x-cloak x-text="s && s.message"></span>
+            <span class="line-clamp-2 min-w-0 break-words text-sm text-red-700 dark:text-red-400" x-show="s && !s.ok" x-cloak :title="s && s.message" x-text="s && s.message"></span>
         </div>
 
         <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -78,9 +78,9 @@
                     </div>
                 @endforeach
                 <div class="border-t border-slate-100 pt-4 dark:border-slate-800">
-                    <div class="grid grid-cols-2 gap-2">
-                        <a href="{{ route('r.vouchers', $router) }}" class="btn-primary btn-sm"><x-icon name="ticket" class="h-4 w-4" /> {{ __('Generate vouchers') }}</a>
-                        <a href="{{ route('r.users', $router) }}" class="btn-secondary btn-sm"><x-icon name="users" class="h-4 w-4" /> {{ __('Users') }}</a>
+                    <div class="flex flex-col gap-2">
+                        <a href="{{ route('r.vouchers', $router) }}" class="btn-primary btn-sm whitespace-nowrap"><x-icon name="ticket" class="h-4 w-4" /> {{ __('Generate vouchers') }}</a>
+                        <a href="{{ route('r.users', $router) }}" class="btn-secondary btn-sm whitespace-nowrap"><x-icon name="users" class="h-4 w-4" /> {{ __('Users') }}</a>
                     </div>
                 </div>
             </div>
@@ -89,8 +89,12 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('overview', (statsUrl, ifacesUrl, trafficUrl, defaultIface) => ({
-                s: null, interfaces: [], iface: defaultIface, rx: 0, tx: 0, chart: null, timer: null,
+            Alpine.data('overview', (statsUrl, ifacesUrl, trafficUrl, defaultIface) => {
+            // Kept outside the component state: Alpine's reactive Proxy breaks Chart.js.
+            let chart = null;
+
+            return {
+                s: null, interfaces: [], iface: defaultIface, rx: 0, tx: 0,
 
                 async init() {
                     this.drawChart();
@@ -117,7 +121,7 @@
 
                 drawChart() {
                     const line = (label, color) => ({label, data: [], borderColor: color, backgroundColor: color + '22', fill: true, tension: .35, pointRadius: 0, borderWidth: 2});
-                    this.chart = new Chart(this.$refs.chart, {
+                    chart = new Chart(this.$refs.chart, {
                         type: 'line',
                         data: {labels: [], datasets: [line('Download', '#14b8a6'), line('Upload', '#0284c7')]},
                         options: {
@@ -130,9 +134,9 @@
                 },
 
                 reset() {
-                    this.chart.data.labels = [];
-                    this.chart.data.datasets.forEach((d) => (d.data = []));
-                    this.chart.update();
+                    chart.data.labels = [];
+                    chart.data.datasets.forEach((d) => (d.data = []));
+                    chart.update();
                 },
 
                 async poll() {
@@ -140,7 +144,7 @@
                         const d = await (await fetch(`${trafficUrl}?interface=${encodeURIComponent(this.iface)}`, {headers: {Accept: 'application/json'}})).json();
                         if (d.ok) {
                             this.rx = d.rx; this.tx = d.tx;
-                            const c = this.chart;
+                            const c = chart;
                             c.data.labels.push('');
                             c.data.datasets[0].data.push(d.rx);
                             c.data.datasets[1].data.push(d.tx);
@@ -153,7 +157,8 @@
                     } catch (e) {}
                     setTimeout(() => this.poll(), 2000);
                 },
-            }));
+            };
+        });
         });
     </script>
 </x-app-layout>

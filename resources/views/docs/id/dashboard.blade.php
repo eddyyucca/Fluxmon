@@ -1,9 +1,10 @@
 <h2>{{ __('Dashboard') }}</h2>
 <p>Dasbor merangkum semua router yang boleh dilihat akun Anda.</p>
 <ul>
-    <li><strong>Kartu pendapatan:</strong> pendapatan dan voucher terjual hari ini dan bulan ini.</li>
-    <li><strong>Grafik pendapatan:</strong> 14 hari terakhir. <em>{{ __('Full report') }}</em> membuka <a href="{{ route('docs', 'reports') }}">Laporan</a>.</li>
+    <li><strong>Kartu pendapatan</strong> (hanya superadmin): pendapatan seluruh perusahaan dan voucher terjual hari ini dan bulan ini.</li>
+    <li><strong>Grafik pendapatan</strong> (hanya superadmin): 14 hari terakhir. <em>{{ __('Full report') }}</em> membuka <a href="{{ route('docs', 'reports') }}">Laporan</a>.</li>
     <li><strong>Kartu router:</strong> {{ __('Online') }} atau {{ __('Offline') }}, board dan versi RouterOS, uptime, pengguna online sekarang, pengguna hotspot, serta bar CPU dan memori. Diperbarui setiap 10 detik.</li>
+    <li><strong>Perangkat terkunci:</strong> staf melihat <em>{{ __('Sign in to this device') }}</em> pada perangkat yang belum dimasuki. Masukkan akun perangkat itu untuk melihat statistik langsungnya (lihat <a href="{{ route('docs', 'accounts') }}">Akun dan peran</a>).</li>
     <li><strong>Banner merah</strong> muncul saat ada <a href="{{ route('docs', 'alerts') }}">peringatan</a> yang aktif. Klik untuk membuka halaman peringatan.</li>
     <li><strong>{{ __('Recent activity') }}:</strong> tindakan terakhir para admin (hanya terlihat oleh peran yang boleh melihat log audit).</li>
 </ul>

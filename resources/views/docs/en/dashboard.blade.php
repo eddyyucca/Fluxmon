@@ -1,9 +1,10 @@
 <h2>Dashboard</h2>
 <p>The dashboard summarises every router your account may see.</p>
 <ul>
-    <li><strong>Revenue cards:</strong> revenue and vouchers sold today and this month.</li>
-    <li><strong>Revenue chart:</strong> the last 14 days. <em>Full report</em> opens <a href="{{ route('docs', 'reports') }}">Reports</a>.</li>
+    <li><strong>Revenue cards</strong> (superadmin only): company-wide revenue and vouchers sold today and this month.</li>
+    <li><strong>Revenue chart</strong> (superadmin only): the last 14 days. <em>Full report</em> opens <a href="{{ route('docs', 'reports') }}">Reports</a>.</li>
     <li><strong>Router cards:</strong> Online or Offline, board and RouterOS version, uptime, users online now, hotspot users, and CPU and memory bars. They refresh every 10 seconds.</li>
+    <li><strong>Locked devices:</strong> staff see <em>Sign in to this device</em> on a device they have not entered yet. Enter that device's account to see its live stats (see <a href="{{ route('docs', 'accounts') }}">Accounts and roles</a>).</li>
     <li><strong>Red banners</strong> appear when an <a href="{{ route('docs', 'alerts') }}">alert</a> is firing. Click one to open the alerts page.</li>
     <li><strong>Recent activity:</strong> the latest actions by admins (visible only to roles that may see the audit log).</li>
 </ul>

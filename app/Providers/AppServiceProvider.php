@@ -24,13 +24,18 @@ class AppServiceProvider extends ServiceProvider
     {
         // Sidebar data: the routers this user may see, and how many alerts are firing on them.
         View::composer('layouts.app', function ($view) {
-            $routers = Schema::hasTable('routers')
-                ? Router::visibleTo(Auth::user())->orderBy('name')->get(['id', 'name', 'is_online'])
+            $user = Auth::user();
+            $routers = Schema::hasTable('routers') && $user
+                ? Router::visibleTo($user)->orderBy('name')->get(['id', 'name', 'is_online'])
                 : collect();
 
+            // Alerts only count on devices this person may look at (for staff: the ones they have signed in to).
+            $watched = $user?->permittedRouterIds('monitor.view');
+            $alertRouters = $watched === null ? $routers->pluck('id') : $routers->pluck('id')->intersect($watched);
+
             $view->with('navRouters', $routers);
-            $view->with('firingAlerts', Schema::hasTable('alert_events') && $routers->isNotEmpty()
-                ? AlertEvent::firing()->whereIn('router_id', $routers->pluck('id'))->count()
+            $view->with('firingAlerts', Schema::hasTable('alert_events') && $alertRouters->isNotEmpty()
+                ? AlertEvent::firing()->whereIn('router_id', $alertRouters)->count()
                 : 0);
         });
     }

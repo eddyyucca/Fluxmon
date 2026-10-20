@@ -8,6 +8,7 @@
     <style>
         @page { size: A4; margin: 8mm; }
         @media print { body { background: #fff !important; } }
+        @media screen and (max-width: 720px) { .sheet { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)) !important; } }
         .sheet { display: grid; gap: 3mm; grid-template-columns: repeat({{ $size === 'small' ? 5 : 3 }}, minmax(0, 1fr)); }
         .ticket { break-inside: avoid; border: 1px dashed #94a3b8; border-radius: 6px; overflow: hidden; background: #fff; color: #0f172a; }
     </style>

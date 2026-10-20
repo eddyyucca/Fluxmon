@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureDeviceLogin;
 use App\Http\Middleware\EnsureRouterAccess;
 use App\Http\Middleware\RegistrationOpen;
 use App\Http\Middleware\RequirePermission;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'registration.open' => RegistrationOpen::class,
             'permission' => RequirePermission::class,
             'router.access' => EnsureRouterAccess::class,
+            'device.login' => EnsureDeviceLogin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

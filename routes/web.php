@@ -6,6 +6,8 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeviceAccountController;
+use App\Http\Controllers\DeviceLoginController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\HotspotProfileController;
 use App\Http\Controllers\HotspotUserController;
@@ -27,7 +29,7 @@ Route::post('/locale', [LocaleController::class, 'update'])->name('locale');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/{router}/stats', [DashboardController::class, 'stats'])
-        ->middleware(['router.access', 'permission:monitor.view'])->name('dashboard.stats');
+        ->middleware(['router.access', 'device.login', 'permission:monitor.view'])->name('dashboard.stats');
 
     // Router management (admins)
     Route::middleware('permission:routers.manage')->group(function () {
@@ -35,8 +37,22 @@ Route::middleware('auth')->group(function () {
         Route::post('/routers/{router}/test', [RouterController::class, 'test'])->name('routers.test');
     });
 
-    // Everything that operates on one router.
+    // The second login: staff sign in to each device with that device's own account.
     Route::prefix('r/{router}')->name('r.')->middleware('router.access')->group(function () {
+        Route::get('/login', [DeviceLoginController::class, 'show'])->name('login');
+        Route::post('/login', [DeviceLoginController::class, 'store'])->name('login.store');
+        Route::post('/logout', [DeviceLoginController::class, 'destroy'])->name('logout');
+    });
+
+    // Everything that operates on one router (staff must have signed in to it first).
+    Route::prefix('r/{router}')->name('r.')->middleware(['router.access', 'device.login'])->group(function () {
+        Route::middleware('permission:accounts.manage')->group(function () {
+            Route::get('/accounts', [DeviceAccountController::class, 'index'])->name('accounts');
+            Route::post('/accounts', [DeviceAccountController::class, 'store'])->name('accounts.store');
+            Route::put('/accounts/{account}', [DeviceAccountController::class, 'update'])->name('accounts.update');
+            Route::delete('/accounts/{account}', [DeviceAccountController::class, 'destroy'])->name('accounts.destroy');
+        });
+
         Route::middleware('permission:monitor.view')->group(function () {
             Route::get('/', [MonitorController::class, 'show'])->name('overview');
             Route::get('/interfaces', [MonitorController::class, 'interfaces'])->name('interfaces');

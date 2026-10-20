@@ -53,6 +53,11 @@ class Router extends Model
         return $this->hasMany(Check::class);
     }
 
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(RouterAccount::class);
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
@@ -65,7 +70,7 @@ class Router extends Model
             return $query->whereRaw('1 = 0');
         }
 
-        return ($user->isAdmin() || $user->all_routers)
+        return ($user->seesAllDevices() || $user->all_routers)
             ? $query
             : $query->whereIn('routers.id', $user->routers()->select('routers.id'));
     }

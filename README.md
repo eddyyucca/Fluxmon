@@ -2,7 +2,7 @@
 
 **Open-source web management for MikroTik routers: monitoring, alerts, config backups and hotspot voucher sales, across as many routers as you run.**
 
-Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Every Flow Builds The Future*). It started as a rewrite of [Mikhmon](https://github.com/laksa19/mikhmonv3) and is growing into a general MikroTik management panel. It is built with Laravel, stores everything in a single SQLite file, and runs on a PC, a Raspberry Pi or a small VPS.
+Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Every Flow Builds The Future*). It is built with Laravel, keeps everything in a single SQLite file, and runs on a PC, a Raspberry Pi or a small VPS.
 
 > **Status: early development.** The test suite runs against an in-memory fake router; behaviour on real RouterOS 6 and 7 devices is still being verified. Bug reports with your RouterOS version and board are very welcome. See [Contributing](#contributing).
 
@@ -34,8 +34,8 @@ Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Ever
 **Platform**
 - Built-in user guide (**Documentation** in the sidebar), in English and Bahasa Indonesia, written for the people who run the hotspot, not only for developers
 - Multiple routers in one dashboard; credentials stored encrypted
-- Roles (admin, technician, cashier, viewer) and per-router access limits
-- Audit log of every change, with the admin who made it
+- Two-level sign-in: every device has its own management accounts, and staff sign in again to each device they manage. Superadmins and administrators work on every device without the second login; only the superadmin gets one combined report of all devices
+- Audit log of every change, with the account and the device account that made it
 - Two languages, English and Bahasa Indonesia, switchable by each person with the **EN | ID** button (also on the sign-in page): interface, user guide, dates, number formats and validation messages. Background alerts and the daily report use an admin-chosen default language
 - Dark mode
 - Daily sales report on Telegram
@@ -65,7 +65,7 @@ npm run build
 php artisan serve
 ```
 
-Open <http://127.0.0.1:8000>. The first visit asks you to create the admin account; after that, registration closes and admins add teammates under **Settings**.
+Open <http://127.0.0.1:8000>. The first visit asks you to create the superadmin account; after that, registration closes and the superadmin adds teammates under **Settings**.
 
 On Windows with XAMPP, enable `extension=sockets` in `php.ini` first.
 
@@ -117,16 +117,27 @@ On Windows use Task Scheduler to run `php artisan schedule:run` every minute.
 3. In Fluxmon: **Routers → Add router**, enter the address and the account, then press **Test**.
 4. Restrict the API and SSH services to your Fluxmon server's address (`/ip service set api address=...`) and, where you can, use API-SSL.
 
-## Roles
+## Accounts and the device login
 
-| Role | Can do |
+Fluxmon has two levels of sign-in. Everyone signs in to Fluxmon; people who manage a device then sign in again to that device with an account that belongs to it.
+
+**Fluxmon accounts** (created by the superadmin in *Settings*):
+
+| Role | Second login | Can do |
+|---|---|---|
+| **Superadmin** | never | everything: every device, one combined report of all devices, routers, settings, accounts, device accounts, audit log |
+| **Administrator** | never | every device, one device at a time: monitoring, hotspot, vouchers, backups, alerts, device accounts, audit log. No settings, no adding routers, no combined report |
+| **Staff** | every device | nothing of their own; what they can do on a device depends on the device account they sign in with |
+
+**Device accounts** (created per device by a superadmin or administrator, under *Maintenance → Device accounts*) work on that device only:
+
+| Device role | Can do on that device |
 |---|---|
-| **admin** | everything: routers, settings, accounts, audit log |
-| **technician** | monitoring, hotspot, profiles, vouchers, backups, alerts, audit log |
-| **cashier** | sell vouchers, manage hotspot users, view reports |
-| **viewer** | read-only dashboards, users and reports |
+| **Technician** | monitoring, hotspot users and profiles, vouchers, reports, backups, alerts |
+| **Cashier** | sell vouchers, manage hotspot users, reports |
+| **Viewer** | read-only monitoring, users and reports |
 
-Any non-admin account can also be limited to specific routers. Permissions are defined in [`config/fluxmon.php`](config/fluxmon.php).
+A staff Fluxmon account can be limited to some devices. Device sign-ins end after 8 idle hours (`FLUXMON_DEVICE_SESSION_MINUTES`), a wrong password five times in a minute locks that device for that person briefly, and a disabled device account is signed out at once. Permissions are defined in [`config/fluxmon.php`](config/fluxmon.php).
 
 ## Configuration
 
@@ -138,6 +149,7 @@ Most settings live in the web UI. A few go in `.env`:
 | `FLUXMON_METRICS_RAW_DAYS` | `7` | keep minute-level samples this long |
 | `FLUXMON_METRICS_ROLLUP_DAYS` | `180` | keep hourly averages this long |
 | `FLUXMON_BACKUPS_KEEP` | `30` | configuration backups kept per router |
+| `FLUXMON_DEVICE_SESSION_MINUTES` | `480` | idle minutes before a device sign-in ends |
 | `MAIL_*` | log driver | needed only for email alerts |
 
 Data lives in `database/database.sqlite`. Back that file up. SQLite is plenty for dozens of routers; for larger installs set `DB_CONNECTION=mysql` (or `pgsql`) in `.env`.
@@ -216,4 +228,4 @@ Fluxmon is developed and maintained by **[PT Fluxa Tritama Indonesia](https://fl
 
 GPL-2.0-or-later, see [LICENSE](LICENSE).
 
-Fluxmon derives from [Mikhmon](https://github.com/laksa19/mikhmonv3), Copyright (C) 2018 Laksamadi Guko, licensed under GPL v2. Third-party libraries keep their own licenses.
+Third-party libraries keep their own licenses.

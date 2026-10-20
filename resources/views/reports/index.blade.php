@@ -22,7 +22,7 @@
         <div>
             <label class="label">{{ __('Router') }}</label>
             <select name="router" class="input !w-48">
-                <option value="">{{ __('All routers') }}</option>
+                @if ($allowAll) <option value="">{{ __('All routers') }}</option> @endif
                 @foreach ($routers as $r) <option value="{{ $r->id }}" @selected($filters['router'] === $r->id)>{{ $r->name }}</option> @endforeach
             </select>
         </div>

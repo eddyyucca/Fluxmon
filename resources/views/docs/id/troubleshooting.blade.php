@@ -37,7 +37,17 @@
 </ul>
 
 <h2>Sebuah menu atau halaman tidak ada</h2>
-<p>Peran Anda tidak mencakupnya (lihat <a href="{{ route('docs', 'accounts') }}">Akun dan peran</a>), atau akun Anda dibatasi pada router lain. Tanyakan kepada admin.</p>
+<p>Peran Anda tidak mencakupnya (lihat <a href="{{ route('docs', 'accounts') }}">Akun dan peran</a>). Staf hanya mendapat menu yang diizinkan <em>akun perangkat</em>-nya, dan hanya setelah masuk ke perangkat. Tanyakan kepada superadmin atau administrator.</p>
+
+<h2>Saya tidak bisa masuk ke perangkat</h2>
+<ul>
+    <li>Pakai <strong>akun perangkat</strong> dari perangkat itu, bukan login Fluxmon Anda. Setiap perangkat punya akunnya sendiri.</li>
+    <li>Username dan password harus milik perangkat <em>ini</em>; akun yang dibuat untuk perangkat lain tidak berlaku di sini.</li>
+    <li>Setelah 5 kali salah dalam semenit, perangkat terkunci sebentar untuk Anda. Tunggu lalu coba lagi.</li>
+    <li>Akun mungkin dinonaktifkan. Superadmin atau administrator bisa memeriksanya di <em>{{ __('Device accounts') }}</em> pada perangkat itu dan mengatur password baru.</li>
+    <li>Jika perangkat tidak muncul sama sekali, akun Fluxmon Anda dibatasi pada perangkat lain.</li>
+    <li>Sudah masuk tetapi kembali ke halaman login? Login perangkat berakhir setelah 8 jam tidak aktif.</li>
+</ul>
 
 <h2>Saya lupa password admin</h2>
 <p>Orang yang punya akses ke server dapat mengatur yang baru. Di folder Fluxmon jalankan:</p>

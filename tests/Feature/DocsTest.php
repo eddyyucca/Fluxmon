@@ -65,7 +65,7 @@ class DocsTest extends FluxmonTestCase
 
     public function test_every_role_can_read_the_docs(): void
     {
-        foreach (['technician', 'cashier', 'viewer'] as $role) {
+        foreach (['administrator', 'staff'] as $role) {
             $user = \App\Models\User::factory()->create();
             $user->forceFill(['role' => $role])->save();
 

@@ -9,7 +9,7 @@
 
 <h2>First steps</h2>
 <ol>
-    <li><strong>Create the admin account.</strong> The very first visit shows a registration form. After that, registration closes; more accounts are added by an admin in <em>Settings</em>.</li>
+    <li><strong>Create the superadmin account.</strong> The very first visit shows a registration form. After that, registration closes; the superadmin adds more accounts in <em>Settings</em> (see <a href="{{ route('docs', 'accounts') }}">Accounts and roles</a>).</li>
     <li><strong>Prepare the router</strong> and <strong>add it</strong> in <em>Routers → Add router</em>. See <a href="{{ route('docs', 'connect-router') }}">Connect a router</a>.</li>
     <li><strong>Press Test.</strong> A green badge with the board name and RouterOS version means Fluxmon can talk to the router.</li>
     <li><strong>Start the scheduler</strong> so the router is sampled every minute.</li>

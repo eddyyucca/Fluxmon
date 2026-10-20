@@ -24,7 +24,7 @@
                 <div><label class="label">{{ __('Quantity') }}</label><input type="number" name="quantity" min="1" max="500" value="{{ old('quantity', 10) }}" class="input" required></div>
                 <div><label class="label">{{ __('Code length') }}</label><input type="number" name="length" min="3" max="16" value="{{ old('length', 6) }}" class="input" required></div>
                 <div><label class="label">{{ __('Prefix') }}</label><input name="prefix" maxlength="8" value="{{ old('prefix') }}" placeholder="WF-" class="input"></div>
-                <div>
+                <div class="col-span-2">
                     <label class="label">{{ __('Characters') }}</label>
                     <select name="charset" class="input">
                         @foreach ($charsets as $c)
@@ -83,7 +83,7 @@
                                 <a href="{{ route('r.vouchers.print', [$router, $b]) }}" target="_blank" class="btn-ghost btn-sm"><x-icon name="printer" class="h-4 w-4" /> {{ __('Print') }}</a>
                                 <form method="POST" action="{{ route('r.vouchers.destroy', [$router, $b]) }}" class="inline" onsubmit="return confirm(@js(__('Remove the unused vouchers of this batch from the router?')))">
                                     @csrf @method('DELETE')
-                                    <button class="btn-ghost btn-sm !text-red-600"><x-icon name="trash" class="h-4 w-4" /></button>
+                                    <button class="btn-ghost btn-sm !text-red-700 dark:!text-red-400"><x-icon name="trash" class="h-4 w-4" /></button>
                                 </form>
                             </td>
                         </tr>

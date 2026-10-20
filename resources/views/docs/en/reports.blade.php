@@ -3,7 +3,7 @@
 <h2>Choose what to see</h2>
 <ul>
     <li><strong>Period:</strong> today, last 7 days, last 30 days, this month, last month, or a custom range (pick <em>From</em> and <em>To</em>).</li>
-    <li><strong>Router:</strong> one router or all of them. Accounts limited to certain routers only see those.</li>
+    <li><strong>Router:</strong> the device to report on. Only the <strong>superadmin</strong> can choose <em>All routers</em>, which folds every device into one combined report. Administrators and staff always report on a single device (staff only on devices they have signed in to).</li>
 </ul>
 <p>Press <strong>Apply</strong> to refresh.</p>
 

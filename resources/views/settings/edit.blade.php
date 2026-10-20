@@ -3,16 +3,15 @@
 
     @php
         $roleHelp = [
-            'admin' => __('Everything, including routers, settings and accounts.'),
-            'technician' => __('Monitoring, hotspot, vouchers, backups, alerts. No router or account management.'),
-            'cashier' => __('Sell vouchers and manage hotspot users. No profiles, backups or settings.'),
-            'viewer' => __('Read-only: dashboards, users and reports.'),
+            'superadmin' => __('Everything: every device without a second login, one combined report, routers, settings and accounts.'),
+            'administrator' => __('Every device without a second login, one device at a time, and its device accounts. No settings, no adding routers, no combined report.'),
+            'staff' => __('Signs in to Fluxmon, then to each device with that device\'s own account. What they can do there depends on that account.'),
         ];
     @endphp
 
     <div class="mx-auto max-w-4xl space-y-6">
         {{-- About --}}
-        <div class="card card-pad flex flex-wrap items-center gap-4">
+        <div class="card card-pad flex flex-col gap-4 sm:flex-row sm:items-center">
             <x-application-logo class="h-12 w-12 shrink-0" />
             <div class="min-w-0 flex-1">
                 <h3 class="card-title">Fluxmon</h3>
@@ -22,14 +21,16 @@
                     · {{ config('fluxmon.developer.tagline') }}
                 </p>
             </div>
-            <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="shrink-0"><x-fluxa-badge class="!h-8" /></a>
-            <a href="mailto:{{ config('fluxmon.developer.email') }}" class="btn-secondary btn-sm">{{ config('fluxmon.developer.email') }}</a>
+            <div class="flex flex-wrap items-center gap-3 sm:justify-end">
+                <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="shrink-0"><x-fluxa-badge class="!h-8" /></a>
+                <a href="mailto:{{ config('fluxmon.developer.email') }}" class="btn-secondary btn-sm break-all">{{ config('fluxmon.developer.email') }}</a>
+            </div>
         </div>
 
         {{-- Language --}}
-        <form method="POST" action="{{ route('settings.locale') }}" class="card card-pad flex flex-wrap items-end gap-3">
+        <form method="POST" action="{{ route('settings.locale') }}" class="card card-pad flex flex-col gap-3 sm:flex-row sm:items-end">
             @csrf @method('PUT')
-            <div class="flex-1">
+            <div class="min-w-0 flex-1">
                 <h3 class="card-title">{{ __('Default language') }}</h3>
                 <p class="muted mt-1">{{ __('Used for anyone who has not chosen their own with the EN / ID switch at the top of the page.') }}</p>
             </div>
@@ -93,31 +94,31 @@
         <div class="card overflow-hidden">
             <div class="px-5 pt-5 sm:px-6">
                 <h3 class="card-title">{{ __('Accounts') }}</h3>
-                <p class="muted mt-1">{{ __('Roles decide what an account can open. An account can also be limited to specific routers.') }}</p>
+                <p class="muted mt-1">{{ __('Roles decide how far an account reaches. Staff sign in to each device with that device\'s own account, and can be limited to some devices.') }}</p>
             </div>
 
             <div class="mt-3 divide-y divide-slate-100 dark:divide-slate-800">
                 @foreach ($users as $u)
                     @php $self = $u->is(auth()->user()); @endphp
                     <form method="POST" action="{{ route('settings.users.update', $u) }}" class="grid items-start gap-3 px-5 py-4 sm:grid-cols-12 sm:px-6"
-                          x-data="{ limited: {{ $u->all_routers || $u->isAdmin() ? 'false' : 'true' }}, role: @js($u->role) }">
+                          x-data="{ limited: {{ $u->role === 'staff' && ! $u->all_routers ? 'true' : 'false' }}, role: @js($u->role) }">
                         @csrf @method('PUT')
-                        <div class="sm:col-span-4">
-                            <div class="font-medium text-slate-900 dark:text-white">{{ $u->name }} @if ($self) <span class="badge-indigo ml-1">{{ __('you') }}</span> @endif</div>
-                            <div class="text-sm text-slate-500">{{ $u->email }}</div>
+                        <div class="min-w-0 sm:col-span-4">
+                            <div class="break-words font-medium text-slate-900 dark:text-white">{{ $u->name }} @if ($self) <span class="badge-indigo ml-1">{{ __('you') }}</span> @endif</div>
+                            <div class="break-all text-sm text-slate-500">{{ $u->email }}</div>
                         </div>
-                        <div class="sm:col-span-3">
+                        <div class="min-w-0 sm:col-span-3">
                             <select name="role" x-model="role" class="input" @disabled($self)>
                                 @foreach ($roles as $r) <option value="{{ $r }}">{{ __(ucfirst($r)) }}</option> @endforeach
                             </select>
                             <p class="mt-1 text-xs text-slate-500" x-text="@js($roleHelp)[role]"></p>
                         </div>
-                        <div class="sm:col-span-3" x-show="role !== 'admin'">
+                        <div class="min-w-0 sm:col-span-3" x-show="role === 'staff'">
                             <label class="flex items-center gap-2 text-sm"><input type="checkbox" x-model="limited" @disabled($self) class="rounded border-slate-300 text-indigo-600 dark:border-slate-600 dark:bg-slate-800"> {{ __('Only some routers') }}</label>
                             <div x-show="limited" x-cloak class="mt-2 space-y-1">
                                 @foreach ($routers as $r)
-                                    <label class="flex items-center gap-2 text-sm">
-                                        <input type="checkbox" name="router_ids[]" value="{{ $r->id }}" @checked($u->routers->contains($r->id)) :disabled="!limited" class="rounded border-slate-300 text-indigo-600 dark:border-slate-600 dark:bg-slate-800"> {{ $r->name }}
+                                    <label class="flex items-start gap-2 text-sm">
+                                        <input type="checkbox" name="router_ids[]" value="{{ $r->id }}" @checked($u->routers->contains($r->id)) :disabled="!limited" class="mt-0.5 shrink-0 rounded border-slate-300 text-indigo-600 dark:border-slate-600 dark:bg-slate-800"> <span class="min-w-0 break-words">{{ $r->name }}</span>
                                     </label>
                                 @endforeach
                             </div>
@@ -125,7 +126,7 @@
                         <div class="flex gap-1 sm:col-span-2 sm:justify-end">
                             @unless ($self)
                                 <button class="btn-secondary btn-sm">{{ __('Save') }}</button>
-                                <button type="submit" form="del-{{ $u->id }}" class="btn-ghost btn-sm !text-red-600">{{ __('Remove') }}</button>
+                                <button type="submit" form="del-{{ $u->id }}" class="btn-ghost btn-sm !text-red-700 dark:!text-red-400">{{ __('Remove') }}</button>
                             @endunless
                         </div>
                     </form>
@@ -136,7 +137,7 @@
             </div>
 
             <form method="POST" action="{{ route('settings.users.store') }}" class="grid gap-3 border-t border-slate-100 p-5 dark:border-slate-800 sm:grid-cols-5 sm:p-6"
-                  x-data="{ role: 'technician', limited: false }">
+                  x-data="{ role: 'staff', limited: false }">
                 @csrf
                 <input name="name" placeholder="{{ __('Name') }}" value="{{ old('name') }}" class="input" required>
                 <input type="email" name="email" placeholder="{{ __('Email') }}" value="{{ old('email') }}" class="input" required>
@@ -146,7 +147,7 @@
                 </select>
                 <button class="btn-primary">{{ __('Add account') }}</button>
 
-                <div class="sm:col-span-5" x-show="role !== 'admin'">
+                <div class="sm:col-span-5" x-show="role === 'staff'">
                     <label class="flex items-center gap-2 text-sm"><input type="checkbox" x-model="limited" class="rounded border-slate-300 text-indigo-600 dark:border-slate-600 dark:bg-slate-800"> {{ __('Only some routers') }}</label>
                     <div x-show="limited" x-cloak class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
                         @foreach ($routers as $r)

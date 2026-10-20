@@ -34,7 +34,7 @@
                             <a href="{{ route('routers.edit', $router) }}" class="btn-ghost btn-sm">{{ __('Edit') }}</a>
                             <form method="POST" action="{{ route('routers.destroy', $router) }}" class="inline" onsubmit="return confirm(@js(__('Remove this router and its voucher history?')))">
                                 @csrf @method('DELETE')
-                                <button class="btn-ghost btn-sm !text-red-600">{{ __('Delete') }}</button>
+                                <button class="btn-ghost btn-sm !text-red-700 dark:!text-red-400">{{ __('Delete') }}</button>
                             </form>
                         </td>
                     </tr>

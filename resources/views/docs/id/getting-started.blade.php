@@ -10,7 +10,7 @@
 
 <h2>Langkah pertama</h2>
 <ol>
-    <li><strong>Buat akun admin.</strong> Kunjungan pertama menampilkan form pendaftaran. Setelah itu pendaftaran ditutup; akun tambahan dibuat oleh admin di <em>{{ __('Settings') }}</em>.</li>
+    <li><strong>Buat akun superadmin.</strong> Kunjungan pertama menampilkan form pendaftaran. Setelah itu pendaftaran ditutup; superadmin menambah akun lain di <em>{{ __('Settings') }}</em> (lihat <a href="{{ route('docs', 'accounts') }}">Akun dan peran</a>).</li>
     <li><strong>Siapkan router</strong> lalu <strong>tambahkan</strong> di <em>{{ __('Routers') }} → {{ __('Add router') }}</em>. Lihat <a href="{{ route('docs', 'connect-router') }}">Menghubungkan router</a>.</li>
     <li><strong>Tekan {{ __('Test') }}.</strong> Lencana hijau berisi nama board dan versi RouterOS berarti Fluxmon bisa berkomunikasi dengan router.</li>
     <li><strong>Jalankan scheduler</strong> agar router disampel setiap menit.</li>
