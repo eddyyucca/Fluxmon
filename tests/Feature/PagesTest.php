@@ -16,7 +16,8 @@ class PagesTest extends FluxmonTestCase
         $this->mikrotik->addHotspotUser(['name' => 'alice', 'password' => 'pw', 'profile' => 'default']);
 
         foreach (['/dashboard', '/routers', '/routers/create', "/routers/{$id}/edit", "/r/{$id}", "/r/{$id}/users", "/r/{$id}/profiles",
-            "/r/{$id}/vouchers", "/r/{$id}/active", '/reports', '/settings', '/audit', '/profile'] as $url) {
+            "/r/{$id}/vouchers", "/r/{$id}/active", "/r/{$id}/monitoring", "/r/{$id}/logs", "/r/{$id}/checks", "/r/{$id}/backups",
+            '/alerts', '/reports', '/settings', '/audit', '/profile'] as $url) {
             $this->asAdmin()->get($url)->assertOk();
         }
     }

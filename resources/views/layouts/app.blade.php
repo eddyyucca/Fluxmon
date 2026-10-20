@@ -24,22 +24,45 @@
     @php
         $current = request()->route('router');
         $current = $current instanceof \App\Models\Router ? $current : null;
-        $mainNav = [
-            ['dashboard', 'home', __('Dashboard'), 'dashboard'],
-            ['reports', 'chart', __('Reports'), 'reports'],
+        $me = auth()->user();
+        // [route, icon, label, active-pattern, permission, badge]
+        $groups = [
+            [null, [
+                ['dashboard', 'home', __('Dashboard'), 'dashboard', null],
+                ['reports', 'chart', __('Reports'), 'reports', 'reports.view'],
+                ['alerts', 'bolt', __('Alerts'), 'alerts*', 'monitor.view', $firingAlerts ?: null],
+            ]],
         ];
-        $routerNav = $current ? [
-            ['r.overview', 'signal', __('Overview'), 'r.overview'],
-            ['r.users', 'users', __('Users'), 'r.users*'],
-            ['r.profiles', 'tag', __('Profiles'), 'r.profiles*'],
-            ['r.vouchers', 'ticket', __('Vouchers'), 'r.vouchers*'],
-            ['r.active', 'wifi', __('Active sessions'), 'r.active*'],
-        ] : [];
-        $manageNav = [
-            ['routers.index', 'server', __('Routers'), 'routers.*'],
-            ['settings', 'cog', __('Settings'), 'settings*'],
-            ['audit', 'list', __('Audit log'), 'audit'],
-        ];
+        if ($current) {
+            $groups[] = [$current->name, [
+                ['r.overview', 'signal', __('Overview'), 'r.overview', 'monitor.view'],
+                ['r.monitoring', 'chart', __('Monitoring'), 'r.monitoring*', 'monitor.view'],
+                ['r.checks', 'refresh', __('Checks'), 'r.checks*', 'monitor.view'],
+                ['r.logs', 'list', __('Logs'), 'r.logs*', 'monitor.view'],
+            ]];
+            $groups[] = [__('Hotspot'), [
+                ['r.users', 'users', __('Users'), 'r.users*', 'hotspot.view'],
+                ['r.profiles', 'tag', __('Profiles'), 'r.profiles*', 'hotspot.view'],
+                ['r.vouchers', 'ticket', __('Vouchers'), 'r.vouchers*', 'vouchers.manage'],
+                ['r.active', 'wifi', __('Active sessions'), 'r.active*', 'hotspot.view'],
+            ]];
+            $groups[] = [__('Maintenance'), [
+                ['r.backups', 'download', __('Backups'), 'r.backups*', 'backups.manage'],
+            ]];
+        }
+        $groups[] = [__('Manage'), [
+            ['routers.index', 'server', __('Routers'), 'routers.*', 'routers.manage'],
+            ['settings', 'cog', __('Settings'), 'settings*', 'settings.manage'],
+            ['audit', 'list', __('Audit log'), 'audit', 'audit.view'],
+        ]];
+
+        // Drop what this role may not open, then any group left empty.
+        $groups = collect($groups)
+            ->map(fn ($g) => [$g[0], array_map(
+                fn ($i) => array_pad($i, 6, null),
+                array_values(array_filter($g[1], fn ($i) => $i[4] === null || $me->hasPermission($i[4]))),
+            )])
+            ->filter(fn ($g) => $g[1])->values()->all();
     @endphp
     <body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200"
           x-data="{ sidebar: false, dark: document.documentElement.classList.contains('dark') }">
@@ -69,18 +92,17 @@
             @endif
 
             <nav class="flex-1 overflow-y-auto px-3 pb-4">
-                @foreach ([[null, $mainNav], [$current?->name, $routerNav], [__('Manage'), $manageNav]] as [$heading, $items])
-                    @if ($items)
-                        @if ($heading) <div class="nav-heading">{{ $heading }}</div> @endif
-                        <div class="space-y-0.5 {{ $heading ? '' : 'pt-3' }}">
-                            @foreach ($items as [$route, $icon, $label, $match])
-                                <a href="{{ str_starts_with($route, 'r.') ? route($route, $current) : route($route) }}"
-                                   class="nav-link {{ request()->routeIs($match) ? 'nav-link-active' : '' }}">
-                                    <x-icon :name="$icon" class="h-[18px] w-[18px]" /> {{ $label }}
-                                </a>
-                            @endforeach
-                        </div>
-                    @endif
+                @foreach ($groups as [$heading, $items])
+                    @if ($heading) <div class="nav-heading">{{ $heading }}</div> @endif
+                    <div class="space-y-0.5 {{ $heading ? '' : 'pt-3' }}">
+                        @foreach ($items as [$route, $icon, $label, $match, $perm, $badge])
+                            <a href="{{ str_starts_with($route, 'r.') ? route($route, $current) : route($route) }}"
+                               class="nav-link {{ request()->routeIs($match) ? 'nav-link-active' : '' }}">
+                                <x-icon :name="$icon" class="h-[18px] w-[18px]" /> {{ $label }}
+                                @if ($badge) <span class="badge-red ml-auto">{{ $badge }}</span> @endif
+                            </a>
+                        @endforeach
+                    </div>
                 @endforeach
             </nav>
 

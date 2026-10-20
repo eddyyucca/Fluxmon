@@ -12,6 +12,11 @@
             <a href="{{ route('routers.create') }}" class="btn-primary mt-5">{{ __('Add your first router') }}</a>
         </div>
     @else
+        {{-- Firing alerts --}}
+        @foreach ($alerts as $a)
+            <a href="{{ route('alerts') }}" class="alert-err flex items-center gap-2"><x-icon name="bolt" class="h-4 w-4 shrink-0" /> {{ $a->title }} <span class="ml-auto text-xs opacity-70">{{ $a->started_at->diffForHumans() }}</span></a>
+        @endforeach
+
         {{-- Revenue --}}
         <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
             @foreach ([

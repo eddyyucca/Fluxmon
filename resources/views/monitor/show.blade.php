@@ -12,6 +12,21 @@
     <div x-data="overview(@js(route('dashboard.stats', $router)), @js(route('r.interfaces', $router)), @js(route('r.traffic', $router)), @js($router->traffic_interface))"
          x-init="init()">
 
+        @foreach ($alerts as $a)
+            <div class="alert-err flex items-center gap-2"><x-icon name="bolt" class="h-4 w-4 shrink-0" /> {{ $a->title }} <span class="ml-auto text-xs opacity-70">{{ $a->started_at->diffForHumans() }}</span></div>
+        @endforeach
+
+        @if ($router->ros_version)
+            <div class="mb-3 flex flex-wrap items-center gap-1.5">
+                @if ($router->identity) <span class="badge-gray">{{ $router->identity }}</span> @endif
+                <span class="badge-indigo">RouterOS {{ $router->ros_version }}</span>
+                @if ($router->architecture) <span class="badge-gray">{{ $router->architecture }}</span> @endif
+                @foreach (['wireguard' => 'WireGuard', 'wifi_new' => 'WiFi (new)', 'wireless_legacy' => 'Wireless (legacy)', 'container' => 'Container', 'lte' => 'LTE', 'ipv6' => 'IPv6'] as $cap => $label)
+                    @if ($router->supports($cap)) <span class="badge-green">{{ $label }}</span> @endif
+                @endforeach
+            </div>
+        @endif
+
         <div class="mb-5 flex items-center gap-2">
             <span :class="s === null ? 'badge-gray' : (s.ok ? 'badge-green' : 'badge-red')" x-text="s === null ? '{{ __('Checking') }}' : (s.ok ? '{{ __('Online') }}' : '{{ __('Offline') }}')"></span>
             <span class="muted" x-show="s && s.ok" x-cloak><span x-text="s && s.board"></span> · RouterOS <span x-text="s && s.version"></span> · {{ __('up') }} <span x-text="s && s.uptime"></span></span>

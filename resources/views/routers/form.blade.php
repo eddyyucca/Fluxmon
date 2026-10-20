@@ -6,6 +6,7 @@
             ['name', __('Name'), 'text', __('Office hotspot')],
             ['host', __('Host / IP'), 'text', '192.168.88.1'],
             ['port', __('API port'), 'number', '8728'],
+            ['ssh_port', __('SSH port (for backups)'), 'number', '22'],
             ['username', __('Username'), 'text', 'admin'],
             ['hotspot_name', __('Hotspot name (shown on vouchers)'), 'text', ''],
             ['dns_name', __('DNS name / login address'), 'text', 'hotspot.local'],

@@ -3,33 +3,51 @@
 namespace App\Console\Commands;
 
 use App\Models\Router;
+use App\Services\Alerting\AlertService;
+use App\Services\CapabilityDetector;
+use App\Services\Mikrotik\MikrotikFactory;
+use App\Services\Monitoring\CheckRunner;
+use App\Services\Monitoring\MetricsCollector;
 use App\Services\SyncService;
-use App\Services\Telegram;
 use Illuminate\Console\Command;
+use Throwable;
 
 class SyncCommand extends Command
 {
     protected $signature = 'fluxmon:sync';
 
-    protected $description = 'Sync vouchers with every router and alert on online/offline changes';
+    protected $description = 'Per router: sync vouchers, collect metrics, run checks and evaluate alerts';
 
-    public function handle(SyncService $sync, Telegram $telegram): int
-    {
+    public function handle(
+        SyncService $sync,
+        MikrotikFactory $factory,
+        CapabilityDetector $detector,
+        MetricsCollector $collector,
+        CheckRunner $checks,
+        AlertService $alerts,
+    ): int {
         foreach (Router::orderBy('name')->get() as $router) {
             $r = $sync->syncRouter($router);
+            $alerts->router($router, $r['ok'], $r['error']);
 
-            $this->line(sprintf(
-                '%s: %s (used %d, expired %d)',
-                $router->name,
-                $r['ok'] ? 'online' : 'OFFLINE - '.$r['error'],
-                $r['used'],
-                $r['expired'],
-            ));
+            if (! $r['ok']) {
+                $this->line("{$router->name}: OFFLINE - {$r['error']}");
 
-            if ($r['changed'] && $telegram->enabled('offline_alert')) {
-                $telegram->send($r['ok']
-                    ? "✅ Router {$router->name} is back online."
-                    : "🔴 Router {$router->name} is unreachable: {$r['error']}");
+                continue;
+            }
+
+            try {
+                $gateway = $factory->make($router);
+                if (! $router->ros_version) {
+                    $detector->detect($router, $gateway);
+                }
+                $samples = $collector->collect($router, $gateway);
+                $checks->runAll($router, $gateway);
+                $alerts->evaluateRules($router);
+
+                $this->line(sprintf('%s: online (vouchers used %d, expired %d, %d samples)', $router->name, $r['used'], $r['expired'], $samples));
+            } catch (Throwable $e) {
+                $this->warn("{$router->name}: monitoring failed - {$e->getMessage()}");
             }
         }
 

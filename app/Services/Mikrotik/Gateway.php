@@ -10,8 +10,29 @@ namespace App\Services\Mikrotik;
  */
 interface Gateway
 {
-    /** @return array{board:string,version:string,uptime:string,cpu:int,memory:int,total_memory:int,free_memory:int} */
+    /** @return array{board:string,version:string,architecture:string,uptime:string,cpu:int,memory:int,total_memory:int,free_memory:int} */
     public function resource(): array;
+
+    public function identity(): string;
+
+    /** @return list<array{name:string,version:string,disabled:bool}> */
+    public function packages(): array;
+
+    /**
+     * Interfaces with their byte counters (cumulative since boot).
+     *
+     * @return list<array{name:string,type:string,running:bool,disabled:bool,comment:string,rx_byte:int,tx_byte:int}>
+     */
+    public function interfaceCounters(): array;
+
+    /** Sensor readings; null when the board has no such sensor. @return array{temperature:?float,voltage:?float} */
+    public function health(): array;
+
+    /** Newest entries last. @return list<array{time:string,topics:string,message:string}> */
+    public function logs(int $limit = 500): array;
+
+    /** Ping run by the router itself. @return array{sent:int,received:int,avg_ms:?float} */
+    public function ping(string $address, int $count = 2): array;
 
     /** @return list<string> interface names */
     public function interfaces(): array;

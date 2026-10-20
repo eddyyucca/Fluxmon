@@ -20,6 +20,7 @@ class RouterRequest extends FormRequest
             'name' => ['required', 'string', 'max:60', Rule::unique('routers', 'name')->ignore($router)],
             'host' => ['required', 'string', 'max:255'],
             'port' => ['required', 'integer', 'between:1,65535'],
+            'ssh_port' => ['required', 'integer', 'between:1,65535'],
             'use_ssl' => ['boolean'],
             'username' => ['required', 'string', 'max:100'],
             // blank on edit = keep the stored password

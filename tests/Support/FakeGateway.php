@@ -20,6 +20,23 @@ class FakeGateway implements Gateway
 
     public bool $offline = false;
 
+    public string $version = '7.14.3 (stable)';
+
+    public int $cpu = 12;
+
+    public int $memory = 40;
+
+    public ?float $temperature = 45.0;
+
+    /** @var list<string> */
+    public array $packageNames = ['routeros', 'wifi-qcom', 'container'];
+
+    /** @var array<string,array{rx:int,tx:int}> cumulative byte counters */
+    public array $counters = ['ether1' => ['rx' => 0, 'tx' => 0], 'wlan1' => ['rx' => 0, 'tx' => 0]];
+
+    /** @var list<array{time:string,topics:string,message:string}> */
+    public array $logLines = [];
+
     private int $seq = 0;
 
     public function __construct()
@@ -67,7 +84,53 @@ class FakeGateway implements Gateway
     {
         $this->guard();
 
-        return ['board' => 'hAP', 'version' => '7.14', 'uptime' => '1d', 'cpu' => 12, 'memory' => 40, 'total_memory' => 1000, 'free_memory' => 600];
+        return ['board' => 'hAP', 'version' => $this->version, 'architecture' => 'arm', 'uptime' => '1d', 'cpu' => $this->cpu, 'memory' => $this->memory, 'total_memory' => 1000, 'free_memory' => 1000 - $this->memory * 10];
+    }
+
+    public function identity(): string
+    {
+        $this->guard();
+
+        return 'MikroTik-Office';
+    }
+
+    public function packages(): array
+    {
+        $this->guard();
+
+        return array_map(fn ($n) => ['name' => $n, 'version' => $this->version, 'disabled' => false], $this->packageNames);
+    }
+
+    public function interfaceCounters(): array
+    {
+        $this->guard();
+
+        return array_map(fn ($name, $i) => ['name' => $name, 'type' => 'ether', 'running' => true, 'disabled' => false, 'comment' => '', 'rx_byte' => $i['rx'], 'tx_byte' => $i['tx']],
+            array_keys($this->counters), $this->counters);
+    }
+
+    public function health(): array
+    {
+        $this->guard();
+
+        return ['temperature' => $this->temperature, 'voltage' => 24.0];
+    }
+
+    public function logs(int $limit = 500): array
+    {
+        $this->guard();
+
+        return array_slice($this->logLines, -$limit);
+    }
+
+    /** @var array<string,array{sent:int,received:int,avg_ms:?float}> */
+    public array $pingResults = [];
+
+    public function ping(string $address, int $count = 2): array
+    {
+        $this->guard();
+
+        return $this->pingResults[$address] ?? ['sent' => $count, 'received' => $count, 'avg_ms' => 4.5];
     }
 
     public function interfaces(): array

@@ -12,6 +12,7 @@ class RouterTest extends FluxmonTestCase
         'name' => 'Branch',
         'host' => '10.0.0.1',
         'port' => 8728,
+        'ssh_port' => 22,
         'username' => 'admin',
         'password' => 'secret',
         'currency' => 'Rp',

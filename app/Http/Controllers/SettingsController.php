@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\SetLocale;
 use App\Models\AuditLog;
+use App\Models\Router;
 use App\Models\Setting;
 use App\Models\User;
+use App\Services\Alerting\Notifier;
 use App\Services\Telegram;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,7 +29,11 @@ class SettingsController extends Controller
                 'daily_report' => Setting::read('telegram_daily_report') === '1',
                 'offline_alert' => Setting::read('telegram_offline_alert') === '1',
             ],
-            'users' => User::orderBy('name')->get(),
+            'webhook_url' => Setting::read('webhook_url'),
+            'alert_email' => Setting::read('alert_email'),
+            'users' => User::with('routers:id,name')->orderBy('name')->get(),
+            'routers' => Router::orderBy('name')->get(['id', 'name']),
+            'roles' => User::ROLES,
         ]);
     }
 
@@ -67,18 +73,71 @@ class SettingsController extends Controller
         return $error ? back()->with('error', $error) : back()->with('status', __('Test message sent.'));
     }
 
+    public function updateNotifications(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'webhook_url' => ['nullable', 'url', 'max:500'],
+            'alert_email' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $emails = array_filter(array_map('trim', explode(',', (string) ($data['alert_email'] ?? ''))));
+        foreach ($emails as $email) {
+            if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return back()->withInput()->with('error', __(':email is not a valid email address.', ['email' => $email]));
+            }
+        }
+
+        Setting::write('webhook_url', $data['webhook_url'] ?? null);
+        Setting::write('alert_email', implode(', ', $emails) ?: null);
+        AuditLog::record('settings.notifications');
+
+        return back()->with('status', __('Notification settings saved.'));
+    }
+
+    public function testNotifications(Notifier $notifier): RedirectResponse
+    {
+        $notifier->send('✅ Fluxmon test alert', 'If you can read this, alerts reach this channel.');
+
+        return back()->with('status', __('Test alert sent to every configured channel.'));
+    }
+
     public function storeUser(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'lowercase', 'max:255', 'unique:users,email'],
             'password' => ['required', Password::defaults()],
+            'role' => ['required', Rule::in(User::ROLES)],
+            'router_ids' => ['nullable', 'array'],
+            'router_ids.*' => ['integer', 'exists:routers,id'],
         ]);
 
-        $user = User::create([...$data, 'password' => Hash::make($data['password'])]);
-        AuditLog::record('admin.created', $user->email);
+        $user = new User(['name' => $data['name'], 'email' => $data['email'], 'password' => Hash::make($data['password'])]);
+        $user->forceFill(['role' => $data['role'], 'all_routers' => empty($data['router_ids'])])->save();
+        $user->routers()->sync($data['router_ids'] ?? []);
+        AuditLog::record('admin.created', "{$user->email} ({$user->role})");
 
-        return back()->with('status', __('Admin :name added.', ['name' => $user->name]));
+        return back()->with('status', __('Account :name added.', ['name' => $user->name]));
+    }
+
+    /** Change a teammate's role or which routers they can see. */
+    public function updateUser(Request $request, User $user): RedirectResponse
+    {
+        if ($user->is($request->user())) {
+            return back()->with('error', __('You cannot change your own role.'));
+        }
+
+        $data = $request->validate([
+            'role' => ['required', Rule::in(User::ROLES)],
+            'router_ids' => ['nullable', 'array'],
+            'router_ids.*' => ['integer', 'exists:routers,id'],
+        ]);
+
+        $user->forceFill(['role' => $data['role'], 'all_routers' => empty($data['router_ids'])])->save();
+        $user->routers()->sync($data['router_ids'] ?? []);
+        AuditLog::record('admin.updated', "{$user->email} ({$user->role})");
+
+        return back()->with('status', __('Account updated.'));
     }
 
     public function destroyUser(Request $request, User $user): RedirectResponse
@@ -90,6 +149,6 @@ class SettingsController extends Controller
         AuditLog::record('admin.deleted', $user->email);
         $user->delete();
 
-        return back()->with('status', __('Admin removed.'));
+        return back()->with('status', __('Account removed.'));
     }
 }

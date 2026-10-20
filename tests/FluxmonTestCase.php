@@ -4,8 +4,10 @@ namespace Tests;
 
 use App\Models\Router;
 use App\Models\User;
+use App\Services\Config\ConfigExporter;
 use App\Services\Mikrotik\MikrotikFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\FakeExporter;
 use Tests\Support\FakeFactory;
 use Tests\Support\FakeGateway;
 
@@ -18,6 +20,8 @@ abstract class FluxmonTestCase extends TestCase
 
     protected FakeGateway $mikrotik;
 
+    protected FakeExporter $exporter;
+
     protected Router $router;
 
     protected User $admin;
@@ -29,6 +33,9 @@ abstract class FluxmonTestCase extends TestCase
         $factory = new FakeFactory();
         $this->mikrotik = $factory->gateway;
         $this->app->instance(MikrotikFactory::class, $factory);
+
+        $this->exporter = new FakeExporter();
+        $this->app->instance(ConfigExporter::class, $this->exporter);
 
         $this->admin = User::factory()->create();
         $this->router = Router::create([

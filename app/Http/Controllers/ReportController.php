@@ -18,15 +18,19 @@ class ReportController extends Controller
     {
         [$from, $to, $filters] = $this->range($request);
 
+        // Only routers this account may see; asking for another one is refused.
+        $routers = Router::visibleTo($request->user())->orderBy('name')->get(['id', 'name', 'currency']);
+        abort_if($filters['router'] && ! $routers->contains('id', $filters['router']), 404);
+        $scope = $filters['router'] ?? $request->user()->limitedRouterIds();
+
         if ($request->query('export') === 'csv') {
-            return $this->export($reports, $from, $to, $filters['router']);
+            return $this->export($reports, $from, $to, $scope);
         }
 
-        $routers = Router::orderBy('name')->get(['id', 'name', 'currency']);
         $currency = $routers->firstWhere('id', $filters['router'])?->currency ?? $routers->first()?->currency ?? 'Rp';
 
         return view('reports.index', [
-            'summary' => $reports->summary($from, $to, $filters['router']),
+            'summary' => $reports->summary($from, $to, $scope),
             'filters' => $filters,
             'from' => $from,
             'to' => $to,
@@ -67,12 +71,12 @@ class ReportController extends Controller
         ]];
     }
 
-    private function export(ReportService $reports, Carbon $from, Carbon $to, ?int $routerId): StreamedResponse
+    private function export(ReportService $reports, Carbon $from, Carbon $to, int|array|null $scope): StreamedResponse
     {
-        return response()->streamDownload(function () use ($reports, $from, $to, $routerId) {
+        return response()->streamDownload(function () use ($reports, $from, $to, $scope) {
             $out = fopen('php://output', 'w');
             fputcsv($out, ['sold_at', 'router', 'username', 'profile', 'price']);
-            foreach ($reports->rows($from, $to, $routerId) as $v) {
+            foreach ($reports->rows($from, $to, $scope) as $v) {
                 fputcsv($out, [$v->first_used_at->format('Y-m-d H:i:s'), $v->router->name, $v->username, $v->profile, $v->price]);
             }
             fclose($out);
