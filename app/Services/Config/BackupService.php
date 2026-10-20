@@ -45,7 +45,8 @@ class BackupService
     public function prune(Router $router): int
     {
         $keep = max(1, (int) config('fluxmon.backups.keep'));
-        $ids = ConfigBackup::where('router_id', $router->id)->latest('id')->skip($keep)->pluck('id');
+        // Slice in PHP: SQLite rejects OFFSET without LIMIT.
+        $ids = ConfigBackup::where('router_id', $router->id)->latest('id')->pluck('id')->slice($keep);
 
         return $ids->isEmpty() ? 0 : ConfigBackup::whereIn('id', $ids)->delete();
     }

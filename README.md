@@ -2,7 +2,7 @@
 
 **Open-source web management for MikroTik routers: monitoring, alerts, config backups and hotspot voucher sales, across as many routers as you run.**
 
-Fluxmon started as a rewrite of [Mikhmon](https://github.com/laksa19/mikhmonv3) and is growing into a general MikroTik management panel. It is built with Laravel, stores everything in a single SQLite file, and runs on a PC, a Raspberry Pi or a small VPS.
+Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Every Flow Builds The Future*). It started as a rewrite of [Mikhmon](https://github.com/laksa19/mikhmonv3) and is growing into a general MikroTik management panel. It is built with Laravel, stores everything in a single SQLite file, and runs on a PC, a Raspberry Pi or a small VPS.
 
 > **Status: early development.** The test suite runs against an in-memory fake router; behaviour on real RouterOS 6 and 7 devices is still being verified. Bug reports with your RouterOS version and board are very welcome. See [Contributing](#contributing).
 
@@ -200,6 +200,10 @@ Testing on real hardware is the most valuable contribution right now.
 Fluxmon adalah aplikasi web open source untuk mengelola banyak router MikroTik: monitoring dengan grafik historis, peringatan (Telegram, webhook, email), backup konfigurasi terjadwal beserta perbandingan versinya, serta penjualan voucher hotspot lengkap dengan laporan.
 
 Cara cepat: `composer install`, salin `.env.example` ke `.env`, `php artisan key:generate`, `php artisan migrate`, `npm install && npm run build`, lalu `php artisan serve`. Jalankan juga `php artisan schedule:work` di terminal kedua supaya grafik, peringatan, dan sinkronisasi voucher berjalan. Aktifkan layanan API dan SSH di MikroTik, buat akun khusus untuk Fluxmon, lalu tambahkan router dari menu **Routers**. Bahasa antarmuka bisa diganti ke Indonesia di **Settings**. Setelah `git pull`, jalankan `php artisan migrate` (jangan `migrate:fresh`, itu menghapus data).
+
+## About the developer
+
+Fluxmon is developed and maintained by **[PT Fluxa Tritama Indonesia](https://fluxa.co.id)**, an IT company building business applications, networks and infrastructure. Questions, partnerships or support: [official@fluxa.co.id](mailto:official@fluxa.co.id).
 
 ## License
 

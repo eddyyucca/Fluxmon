@@ -45,7 +45,10 @@
                     </ul>
                 </div>
 
-                <div class="relative text-sm text-indigo-100">{{ __('Open source · GPL-2.0') }}</div>
+                <div class="relative text-sm text-indigo-100">
+                    <div>{{ __('Developed by') }} <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="font-semibold text-white hover:underline">{{ config('fluxmon.developer.name') }}</a></div>
+                    <div class="mt-1 text-indigo-200">{{ config('fluxmon.developer.tagline') }} · {{ __('Open source · GPL-2.0') }}</div>
+                </div>
             </div>
 
             {{-- Form --}}
@@ -57,6 +60,10 @@
                     </div>
 
                     {{ $slot }}
+
+                    <p class="mt-10 text-center text-xs text-slate-400 dark:text-slate-500 lg:hidden">
+                        {{ __('Developed by') }} <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="font-medium hover:underline">{{ config('fluxmon.developer.name') }}</a>
+                    </p>
                 </div>
             </div>
         </div>

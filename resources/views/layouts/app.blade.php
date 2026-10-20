@@ -157,6 +157,11 @@
 
                 {{ $slot }}
             </main>
+
+            <footer class="px-4 pb-6 text-center text-xs text-slate-400 dark:text-slate-500 sm:px-6 lg:px-8">
+                Fluxmon · {{ __('Developed by') }}
+                <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="font-medium hover:text-indigo-600 dark:hover:text-cyan-400">{{ config('fluxmon.developer.name') }}</a>
+            </footer>
         </div>
     </body>
 </html>

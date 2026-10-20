@@ -2,6 +2,17 @@
 
 return [
     /*
+    | Who develops Fluxmon. Shown in the footer, on the sign-in page and in Settings.
+    */
+    'developer' => [
+        'name' => 'PT Fluxa Tritama Indonesia',
+        'short' => 'Fluxa',
+        'url' => 'https://fluxa.co.id',
+        'email' => 'official@fluxa.co.id',
+        'tagline' => 'Every Flow Builds The Future',
+    ],
+
+    /*
     | Permissions granted to each role. '*' means everything.
     | Routes are guarded with the `permission:<name>` middleware.
     */

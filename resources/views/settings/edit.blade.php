@@ -11,6 +11,20 @@
     @endphp
 
     <div class="mx-auto max-w-4xl space-y-6">
+        {{-- About --}}
+        <div class="card card-pad flex flex-wrap items-center gap-4">
+            <x-application-logo class="h-12 w-12 shrink-0" />
+            <div class="min-w-0 flex-1">
+                <h3 class="card-title">Fluxmon</h3>
+                <p class="muted mt-0.5">
+                    {{ __('Developed by') }}
+                    <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="font-medium text-indigo-600 hover:underline dark:text-cyan-400">{{ config('fluxmon.developer.name') }}</a>
+                    · {{ config('fluxmon.developer.tagline') }}
+                </p>
+            </div>
+            <a href="mailto:{{ config('fluxmon.developer.email') }}" class="btn-secondary btn-sm">{{ config('fluxmon.developer.email') }}</a>
+        </div>
+
         {{-- Language --}}
         <form method="POST" action="{{ route('settings.locale') }}" class="card card-pad flex flex-wrap items-end gap-3">
             @csrf @method('PUT')

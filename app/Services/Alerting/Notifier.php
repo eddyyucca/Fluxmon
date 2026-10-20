@@ -2,6 +2,7 @@
 
 namespace App\Services\Alerting;
 
+use App\Mail\AlertMail;
 use App\Models\Setting;
 use App\Services\Telegram;
 use Illuminate\Support\Facades\Http;
@@ -33,7 +34,7 @@ class Notifier
 
         $recipients = array_filter(array_map('trim', explode(',', (string) Setting::read('alert_email'))));
         if ($recipients) {
-            $this->guarded('email', fn () => Mail::raw($text, fn ($m) => $m->to($recipients)->subject('[Fluxmon] '.$title)));
+            $this->guarded('email', fn () => Mail::to($recipients)->send(new AlertMail($title, $text)));
         }
     }
 

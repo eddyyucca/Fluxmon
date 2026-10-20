@@ -2,8 +2,12 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "fluxmon/fluxmon",
     "type": "project",
-    "description": "Fluxmon - open-source MikroTik hotspot and voucher manager.",
-    "keywords": ["laravel", "framework"],
+    "description": "Fluxmon - open-source MikroTik management: monitoring, alerts, backups and hotspot vouchers. Developed by PT Fluxa Tritama Indonesia.",
+    "keywords": ["mikrotik", "routeros", "hotspot", "monitoring", "laravel"],
+    "homepage": "https://fluxa.co.id",
+    "authors": [
+        {"name": "PT Fluxa Tritama Indonesia", "email": "official@fluxa.co.id", "homepage": "https://fluxa.co.id"}
+    ],
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^8.2",
