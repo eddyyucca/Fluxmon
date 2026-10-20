@@ -32,6 +32,7 @@ Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Ever
 - No on-login scripts installed on your routers
 
 **Platform**
+- Built-in user guide (**Documentation** in the sidebar), in English and Bahasa Indonesia, written for the people who run the hotspot, not only for developers
 - Multiple routers in one dashboard; credentials stored encrypted
 - Roles (admin, technician, cashier, viewer) and per-router access limits
 - Audit log of every change, with the admin who made it
@@ -191,7 +192,8 @@ Issues and pull requests are welcome.
 1. Fork, create a branch, make your change.
 2. Add or update tests; `php artisan test` must pass.
 3. Keep user-facing strings in `__('...')` and add the Indonesian translation to `lang/id.json` when you can.
-4. When reporting a bug, include your RouterOS version, board, and what the page or log shows.
+4. The user guide lives in `resources/views/docs/{en,id}/`. When you change how a feature works, update its page in both languages (tests check that every page exists in both, and that titles are translated). In the Indonesian pages take screen labels from `__('...')` so the guide matches the interface.
+5. When reporting a bug, include your RouterOS version, board, and what the page or log shows.
 
 Testing on real hardware is the most valuable contribution right now.
 

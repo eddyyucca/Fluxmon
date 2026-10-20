@@ -57,6 +57,7 @@
             ['routers.index', 'server', __('Routers'), 'routers.*', 'routers.manage'],
             ['settings', 'cog', __('Settings'), 'settings*', 'settings.manage'],
             ['audit', 'list', __('Audit log'), 'audit', 'audit.view'],
+            ['docs', 'book', __('Documentation'), 'docs*', null],
         ]];
 
         // Drop what this role may not open, then any group left empty.

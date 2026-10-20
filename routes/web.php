@@ -6,6 +6,7 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocsController;
 use App\Http\Controllers\HotspotProfileController;
 use App\Http\Controllers\HotspotUserController;
 use App\Http\Controllers\LogController;
@@ -109,6 +110,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/users/{user}', [SettingsController::class, 'updateUser'])->name('settings.users.update');
         Route::delete('/settings/users/{user}', [SettingsController::class, 'destroyUser'])->name('settings.users.destroy');
     });
+
+    // The user guide is for every signed-in account, whatever the role.
+    Route::get('/docs/{page?}', [DocsController::class, 'show'])->name('docs');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

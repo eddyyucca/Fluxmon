@@ -9,7 +9,10 @@
             <x-application-logo class="mx-auto h-14 w-14" />
             <h2 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">{{ __('Welcome to Fluxmon') }}</h2>
             <p class="muted mt-1">{{ __('Connect your first MikroTik router to start monitoring and selling vouchers.') }}</p>
-            <a href="{{ route('routers.create') }}" class="btn-primary mt-5">{{ __('Add your first router') }}</a>
+            <div class="mt-5 flex flex-wrap justify-center gap-2">
+                <a href="{{ route('routers.create') }}" class="btn-primary">{{ __('Add your first router') }}</a>
+                <a href="{{ route('docs', 'getting-started') }}" class="btn-secondary">{{ __('Read the guide') }}</a>
+            </div>
         </div>
     @else
         {{-- Firing alerts --}}

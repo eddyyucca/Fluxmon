@@ -23,6 +23,7 @@
         'pencil' => '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
         'logout' => '<path d="M15 4h4a1 1 0 011 1v14a1 1 0 01-1 1h-4M10 16l-4-4 4-4M6 12h10"/>',
         'wifi' => '<path d="M2 9a15 15 0 0120 0M5 13a10 10 0 0114 0M8.5 16.5a5 5 0 017 0"/><circle cx="12" cy="20" r="1"/>',
+        'book' => '<path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4V4z"/><path d="M8 20a4 4 0 01-4-4M8 8h6M8 12h6"/>',
         'bolt' => '<path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"/>',
     ];
 @endphp

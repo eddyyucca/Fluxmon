@@ -353,5 +353,19 @@
     "CPU load (%)": "Beban CPU (%)",
     "Memory used (%)": "Memori terpakai (%)",
     "Temperature (°C)": "Suhu (°C)",
-    "Developed by": "Dikembangkan oleh"
+    "Developed by": "Dikembangkan oleh",
+    "Documentation": "Dokumentasi",
+    "On this page": "Di halaman ini",
+    "Getting started": "Mulai cepat",
+    "Connect a router": "Menghubungkan router",
+    "Dashboard and overview": "Dasbor dan ringkasan",
+    "Monitoring and checks": "Pemantauan dan pengecekan",
+    "Alerts and notifications": "Peringatan dan notifikasi",
+    "Hotspot users and profiles": "Pengguna dan profil hotspot",
+    "Selling vouchers": "Menjual voucher",
+    "Configuration backups": "Backup konfigurasi",
+    "Accounts and roles": "Akun dan peran",
+    "Scheduler (background jobs)": "Scheduler (tugas latar belakang)",
+    "Troubleshooting": "Pemecahan masalah",
+    "Read the guide": "Baca panduan"
 }

@@ -70,6 +70,29 @@
 .dark .border-gray-300 { border-color: rgb(51 65 85); }
 .dark input:not([type='checkbox']):not([type='radio']) { background-color: rgb(30 41 59); color: rgb(241 245 249); }
 
+/* In-app documentation text. */
+@layer components {
+    .prose-docs { @apply text-sm leading-7 text-slate-700 dark:text-slate-300; }
+    .prose-docs h1 { @apply text-2xl font-bold tracking-tight text-slate-900 dark:text-white; }
+    .prose-docs h2 { @apply mt-10 scroll-mt-24 border-b border-slate-200 pb-2 text-lg font-semibold text-slate-900 dark:border-slate-800 dark:text-white; }
+    .prose-docs h3 { @apply mt-6 text-base font-semibold text-slate-900 dark:text-slate-100; }
+    .prose-docs p { @apply mt-3; }
+    .prose-docs ul { @apply mt-3 list-disc space-y-1.5 pl-6; }
+    .prose-docs ol { @apply mt-3 list-decimal space-y-1.5 pl-6; }
+    .prose-docs li > ul, .prose-docs li > ol { @apply mt-1.5; }
+    .prose-docs a { @apply font-medium text-indigo-600 underline decoration-indigo-300 underline-offset-2 hover:decoration-indigo-600 dark:text-cyan-400 dark:decoration-cyan-700; }
+    .prose-docs strong { @apply font-semibold text-slate-900 dark:text-slate-100; }
+    .prose-docs code { @apply rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[0.85em] text-slate-800 dark:bg-slate-800 dark:text-slate-200; }
+    .prose-docs pre { @apply mt-3 overflow-x-auto rounded-xl bg-slate-900 p-4 text-xs leading-6 text-slate-100; }
+    .prose-docs pre code { @apply bg-transparent p-0 text-inherit dark:bg-transparent dark:text-inherit; }
+    .prose-docs table { @apply mt-4 block w-full overflow-x-auto text-left text-sm sm:table; }
+    .prose-docs th { @apply border-b border-slate-200 bg-slate-50 px-3 py-2 font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300; }
+    .prose-docs td { @apply border-b border-slate-100 px-3 py-2 align-top dark:border-slate-800; }
+    .prose-docs .callout { @apply mt-4 rounded-xl border-l-4 border-indigo-500 bg-indigo-50 p-4 dark:bg-indigo-500/10; }
+    .prose-docs .callout-warn { @apply mt-4 rounded-xl border-l-4 border-amber-500 bg-amber-50 p-4 dark:bg-amber-500/10; }
+    .prose-docs .callout > :first-child, .prose-docs .callout-warn > :first-child { @apply mt-0; }
+}
+
 [x-cloak] { display: none !important; }
 
 /* Sign-in page waves: drift sideways by exactly one wave period (640 units), bob gently up and down. */
