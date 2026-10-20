@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RouterRequest;
+use App\Models\AuditLog;
 use App\Models\Router;
-use App\Services\Mikrotik\MikrotikClient;
+use App\Services\SyncService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Throwable;
 
 class RouterController extends Controller
 {
@@ -25,9 +27,10 @@ class RouterController extends Controller
 
     public function store(RouterRequest $request): RedirectResponse
     {
-        Router::create($request->validated());
+        $router = Router::create($request->validated());
+        AuditLog::record('router.created', $router->name, $router);
 
-        return redirect()->route('routers.index')->with('status', 'Router added.');
+        return redirect()->route('r.overview', $router)->with('status', __('Router added.'));
     }
 
     public function edit(Router $router): View
@@ -42,19 +45,40 @@ class RouterController extends Controller
             unset($data['password']);
         }
         $router->update($data);
+        AuditLog::record('router.updated', $router->name, $router);
 
-        return redirect()->route('routers.index')->with('status', 'Router updated.');
+        return redirect()->route('routers.index')->with('status', __('Router updated.'));
     }
 
     public function destroy(Router $router): RedirectResponse
     {
+        AuditLog::record('router.deleted', $router->name);
         $router->delete();
 
-        return redirect()->route('routers.index')->with('status', 'Router removed.');
+        return redirect()->route('routers.index')->with('status', __('Router removed.'));
     }
 
     public function test(Router $router): JsonResponse
     {
-        return response()->json((new MikrotikClient($router))->test());
+        try {
+            $res = $this->gateway($router)->resource();
+            $router->forceFill(['is_online' => true, 'last_checked_at' => now(), 'last_connected_at' => now()])->save();
+
+            return response()->json(['ok' => true, 'board' => $res['board'], 'version' => $res['version'], 'uptime' => $res['uptime']]);
+        } catch (Throwable $e) {
+            $router->forceFill(['is_online' => false, 'last_checked_at' => now()])->save();
+
+            return response()->json(['ok' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /** Manual "sync now" from a router page. */
+    public function sync(Router $router, SyncService $sync): RedirectResponse
+    {
+        $r = $sync->syncRouter($router);
+
+        return $r['ok']
+            ? back()->with('status', __('Synced: :used newly used, :expired expired.', ['used' => $r['used'], 'expired' => $r['expired']]))
+            : back()->with('error', $r['error']);
     }
 }

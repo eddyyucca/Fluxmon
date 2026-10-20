@@ -3,18 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Router;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
+use Tests\FluxmonTestCase;
 
-class RouterTest extends TestCase
+class RouterTest extends FluxmonTestCase
 {
-    use RefreshDatabase;
-
     private array $payload = [
-        'name' => 'Office',
-        'host' => '192.168.88.1',
+        'name' => 'Branch',
+        'host' => '10.0.0.1',
         'port' => 8728,
         'username' => 'admin',
         'password' => 'secret',
@@ -30,32 +26,40 @@ class RouterTest extends TestCase
 
     public function test_router_is_created_with_encrypted_password(): void
     {
-        $this->actingAs(User::factory()->create())
-            ->post('/routers', $this->payload)
-            ->assertRedirect('/routers');
+        $this->asAdmin()->post('/routers', $this->payload)->assertRedirect();
 
-        $raw = DB::table('routers')->where('name', 'Office')->value('password');
+        $raw = DB::table('routers')->where('name', 'Branch')->value('password');
         $this->assertNotSame('secret', $raw);
-        $this->assertSame('secret', Router::first()->password);
+        $this->assertSame('secret', Router::where('name', 'Branch')->first()->password);
     }
 
     public function test_blank_password_on_update_keeps_existing(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user)->post('/routers', $this->payload);
-        $router = Router::first();
-
-        $this->actingAs($user)
-            ->put("/routers/{$router->id}", array_merge($this->payload, ['host' => '10.0.0.1', 'password' => '']))
+        $this->asAdmin()
+            ->put("/routers/{$this->router->id}", array_merge($this->payload, ['name' => 'Office', 'host' => '10.9.9.9', 'password' => '']))
             ->assertRedirect('/routers');
 
-        $router->refresh();
-        $this->assertSame('10.0.0.1', $router->host);
-        $this->assertSame('secret', $router->password);
+        $this->router->refresh();
+        $this->assertSame('10.9.9.9', $this->router->host);
+        $this->assertSame('secret', $this->router->password);
     }
 
-    public function test_dashboard_renders(): void
+    public function test_connection_test_reports_success_and_failure(): void
     {
-        $this->actingAs(User::factory()->create())->get('/dashboard')->assertOk()->assertSee('Fluxmon');
+        $this->asAdmin()->postJson("/routers/{$this->router->id}/test")
+            ->assertJson(['ok' => true, 'board' => 'hAP']);
+        $this->assertTrue($this->router->fresh()->is_online);
+
+        $this->mikrotik->offline = true;
+        $this->asAdmin()->postJson("/routers/{$this->router->id}/test")
+            ->assertJson(['ok' => false, 'message' => 'Connection refused']);
+        $this->assertFalse($this->router->fresh()->is_online);
+    }
+
+    public function test_actions_are_written_to_the_audit_log(): void
+    {
+        $this->asAdmin()->post('/routers', $this->payload);
+
+        $this->assertDatabaseHas('audit_logs', ['action' => 'router.created', 'details' => 'Branch']);
     }
 }

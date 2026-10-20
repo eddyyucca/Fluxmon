@@ -12,6 +12,8 @@ class AuthenticationTest extends TestCase
 
     public function test_login_screen_can_be_rendered(): void
     {
+        User::factory()->create(); // with no admin yet, /login sends visitors to /register
+
         $response = $this->get('/login');
 
         $response->assertStatus(200);
