@@ -119,7 +119,7 @@
                     const line = (label, color) => ({label, data: [], borderColor: color, backgroundColor: color + '22', fill: true, tension: .35, pointRadius: 0, borderWidth: 2});
                     this.chart = new Chart(this.$refs.chart, {
                         type: 'line',
-                        data: {labels: [], datasets: [line('Download', '#06b6d4'), line('Upload', '#6366f1')]},
+                        data: {labels: [], datasets: [line('Download', '#14b8a6'), line('Upload', '#0284c7')]},
                         options: {
                             animation: false,
                             interaction: {mode: 'index', intersect: false},

@@ -117,7 +117,7 @@
                 draw() {
                     new Chart(this.$refs.c, {
                         type: 'bar',
-                        data: {labels, datasets: [{data, backgroundColor: '#6366f1', borderRadius: 6, maxBarThickness: 28}]},
+                        data: {labels, datasets: [{data, backgroundColor: '#0284c7', borderRadius: 6, maxBarThickness: 28}]},
                         options: {
                             plugins: {tooltip: {callbacks: {label: (c) => fmtMoney(c.parsed.y, currency)}}},
                             scales: {y: {beginAtZero: true, ticks: {callback: (v) => v.toLocaleString('id-ID')}}, x: {grid: {display: false}}},

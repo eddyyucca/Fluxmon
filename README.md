@@ -205,6 +205,10 @@ Cara cepat: `composer install`, salin `.env.example` ke `.env`, `php artisan key
 
 Fluxmon is developed and maintained by **[PT Fluxa Tritama Indonesia](https://fluxa.co.id)**, an IT company building business applications, networks and infrastructure. Questions, partnerships or support: [official@fluxa.co.id](mailto:official@fluxa.co.id).
 
+### Brand assets
+
+`public/brand/` holds the Fluxmon mark and the Fluxa logo (`fluxa-black.png`, `fluxa-white.png`), and the interface colours follow Fluxa's palette (navy with sky and teal accents). The Fluxa name and logo identify the developer; if you fork Fluxmon under a different name, replace the files in `public/brand/`, the icons in `public/` and the `developer` block in `config/fluxmon.php`.
+
 ## License
 
 GPL-2.0-or-later, see [LICENSE](LICENSE).

@@ -6,7 +6,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Fluxmon') }}</title>
-        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+        <meta name="theme-color" content="#07111f">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
@@ -74,7 +77,7 @@
                :class="{ '!translate-x-0': sidebar }">
             <a href="{{ route('dashboard') }}" class="flex h-16 shrink-0 items-center gap-2.5 px-5">
                 <x-application-logo class="h-9 w-9" />
-                <span class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Flux<span class="text-indigo-600 dark:text-cyan-400">mon</span></span>
+                <span class="text-lg font-extrabold italic tracking-tight text-slate-900 dark:text-white">flux<span class="text-indigo-600 dark:text-cyan-400">mon</span></span>
             </a>
 
             @if ($navRouters->isNotEmpty())
@@ -158,9 +161,13 @@
                 {{ $slot }}
             </main>
 
-            <footer class="px-4 pb-6 text-center text-xs text-slate-400 dark:text-slate-500 sm:px-6 lg:px-8">
-                Fluxmon · {{ __('Developed by') }}
-                <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="font-medium hover:text-indigo-600 dark:hover:text-cyan-400">{{ config('fluxmon.developer.name') }}</a>
+            <footer class="px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+                <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
+                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
+                    <span>{{ __('Developed by') }}</span>
+                    <x-fluxa-badge class="!h-5" />
+                    <span class="hidden sm:inline">· {{ config('fluxmon.developer.tagline') }}</span>
+                </a>
             </footer>
         </div>
     </body>

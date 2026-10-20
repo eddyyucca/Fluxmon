@@ -22,6 +22,7 @@
                     · {{ config('fluxmon.developer.tagline') }}
                 </p>
             </div>
+            <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener" class="shrink-0"><x-fluxa-badge class="!h-8" /></a>
             <a href="mailto:{{ config('fluxmon.developer.email') }}" class="btn-secondary btn-sm">{{ config('fluxmon.developer.email') }}</a>
         </div>
 

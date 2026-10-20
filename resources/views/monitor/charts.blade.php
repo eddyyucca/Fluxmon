@@ -76,9 +76,9 @@
                         },
                     });
                     const pct = (v) => `${Math.round(v)}%`;
-                    this.c.load = make(this.$refs.load, [line('CPU', '#6366f1'), line('Memory', '#06b6d4')], pct);
+                    this.c.load = make(this.$refs.load, [line('CPU', '#0284c7'), line('Memory', '#14b8a6')], pct);
                     this.c.users = make(this.$refs.users, [line('Online', '#10b981', true)], (v) => Math.round(v));
-                    this.c.traffic = make(this.$refs.traffic, [line('Download', '#06b6d4', true), line('Upload', '#6366f1', true)], fmtBits);
+                    this.c.traffic = make(this.$refs.traffic, [line('Download', '#14b8a6', true), line('Upload', '#0284c7', true)], fmtBits);
                     this.c.temp = make(this.$refs.temp, [line('°C', '#f59e0b')], (v) => `${v.toFixed(0)}°`);
                     this.load();
                     setInterval(() => this.load(), 60000);
