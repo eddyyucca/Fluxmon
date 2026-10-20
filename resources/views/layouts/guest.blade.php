@@ -27,9 +27,16 @@
         <div class="grid min-h-screen lg:grid-cols-2">
             {{-- Brand panel --}}
             <div class="relative hidden overflow-hidden bg-gradient-to-br from-[#07111f] via-[#0d1b2e] to-[#0e3b4f] p-12 text-white lg:flex lg:flex-col lg:justify-between">
-                <svg class="pointer-events-none absolute inset-0 h-full w-full opacity-[0.12]" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round">
+                {{-- Flowing waves. Each path is three 640-unit periods wide and slides one period, so the loop is seamless. --}}
+                <svg class="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke-width="3" stroke-linecap="round" aria-hidden="true">
                     @foreach (range(0, 9) as $i)
-                        <path d="M-20 {{ 120 + $i * 80 }}c120-70 220-70 320 0s200 70 320 0"/>
+                        @php $accent = $i % 3 === 1; @endphp
+                        <g class="flux-bob" style="--b: {{ 7 + ($i % 4) * 1.5 }}s; animation-delay: -{{ $i * 1.7 }}s">
+                            <path class="flux-wave"
+                                  style="--d: {{ 22 + ($i % 5) * 5 }}s; animation-delay: -{{ $i * 3.1 }}s; {{ $i % 2 ? 'animation-direction: reverse;' : '' }}"
+                                  stroke="{{ $accent ? '#2dd4bf' : '#ffffff' }}" stroke-opacity="{{ $accent ? 0.35 : 0.14 }}"
+                                  d="M-640 {{ 80 + $i * 72 }}{{ str_repeat(' c120-70 220-70 320 0 s200 70 320 0', 3) }}"/>
+                        </g>
                     @endforeach
                 </svg>
 

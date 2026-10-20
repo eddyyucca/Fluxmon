@@ -71,3 +71,12 @@
 .dark input:not([type='checkbox']):not([type='radio']) { background-color: rgb(30 41 59); color: rgb(241 245 249); }
 
 [x-cloak] { display: none !important; }
+
+/* Sign-in page waves: drift sideways by exactly one wave period (640 units), bob gently up and down. */
+@keyframes flux-wave { to { transform: translateX(640px); } }
+@keyframes flux-bob { 0%, 100% { transform: translateY(-12px); } 50% { transform: translateY(12px); } }
+.flux-wave { animation: flux-wave var(--d, 28s) linear infinite; }
+.flux-bob { animation: flux-bob var(--b, 9s) ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+    .flux-wave, .flux-bob { animation: none; }
+}
