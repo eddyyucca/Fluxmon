@@ -65,20 +65,23 @@
             </div>
 
             {{-- Form --}}
-            <div class="flex items-center justify-center px-6 py-12">
-                <div class="w-full max-w-sm">
-                    <div class="mb-8 flex items-center gap-2.5 lg:hidden">
-                        <x-application-logo class="h-10 w-10" />
-                        <span class="text-xl font-extrabold italic tracking-tight">flux<span class="text-indigo-600 dark:text-cyan-400">mon</span></span>
+            <div class="flex min-h-screen flex-col px-6 py-8">
+                <div class="flex flex-1 items-center justify-center py-8">
+                    <div class="w-full max-w-sm">
+                        <div class="mb-8 flex items-center gap-2.5 lg:hidden">
+                            <x-application-logo class="h-10 w-10" />
+                            <span class="text-xl font-extrabold italic tracking-tight">flux<span class="text-indigo-600 dark:text-cyan-400">mon</span></span>
+                        </div>
+
+                        {{ $slot }}
                     </div>
-
-                    {{ $slot }}
-
-                    <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
-                       class="mt-10 flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 lg:hidden">
-                        <span>{{ __('Developed by') }}</span> <x-fluxa-badge class="!h-5" />
-                    </a>
                 </div>
+
+                {{-- Pinned to the bottom of the screen on small devices (the dark panel carries it on large ones). --}}
+                <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
+                   class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 lg:hidden">
+                    <span>{{ __('Developed by') }}</span> <x-fluxa-badge class="!h-5" />
+                </a>
             </div>
         </div>
     </body>

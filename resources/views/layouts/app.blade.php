@@ -128,7 +128,8 @@
             </div>
         </aside>
 
-        <div class="lg:pl-64">
+        {{-- Column that fills the viewport: main grows, so the footer always sits at the bottom. --}}
+        <div class="flex min-h-screen flex-col lg:pl-64">
             <header class="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white/80 px-4 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80 sm:px-6 lg:px-8">
                 <button type="button" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden" @click="sidebar = true" aria-label="Menu">
                     <x-icon name="menu" />
@@ -149,7 +150,7 @@
                 </button>
             </header>
 
-            <main class="px-4 py-6 sm:px-6 lg:px-8">
+            <main class="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
                 @if (session('status')) <div class="alert-ok">{{ session('status') }}</div> @endif
                 @if (session('error')) <div class="alert-err">{{ session('error') }}</div> @endif
                 @if ($errors->any() && ! request()->routeIs('profile.*'))
@@ -161,7 +162,7 @@
                 {{ $slot }}
             </main>
 
-            <footer class="px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+            <footer class="mt-auto border-t border-slate-200 px-4 py-4 dark:border-slate-800 sm:px-6 lg:px-8">
                 <a href="{{ config('fluxmon.developer.url') }}" target="_blank" rel="noopener"
                    class="mx-auto flex w-fit items-center gap-2.5 text-xs text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">
                     <span>{{ __('Developed by') }}</span>
