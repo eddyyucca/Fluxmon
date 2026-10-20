@@ -20,7 +20,7 @@
                     <tr>
                         <td class="text-slate-500">{{ $b->id }}</td>
                         <td class="whitespace-nowrap font-medium text-slate-900 dark:text-white">
-                            <a href="{{ route('r.backups.show', [$router, $b]) }}" class="hover:text-indigo-600 dark:hover:text-cyan-400">{{ $b->created_at->format('d M Y H:i') }}</a>
+                            <a href="{{ route('r.backups.show', [$router, $b]) }}" class="hover:text-indigo-600 dark:hover:text-cyan-400">{{ $b->created_at->translatedFormat('d M Y H:i') }}</a>
                         </td>
                         <td><span class="badge-gray">{{ $b->reason }}</span></td>
                         <td class="text-slate-600 dark:text-slate-400">{{ $b->user?->name ?? '—' }}</td>

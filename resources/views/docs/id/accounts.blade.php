@@ -4,10 +4,10 @@
 <table>
     <thead><tr><th>Peran</th><th>Untuk</th><th>Bisa</th></tr></thead>
     <tbody>
-        <tr><td><strong>Admin</strong></td><td>Pemilik, manajer IT</td><td>Semuanya: router, pengaturan, akun, backup, log audit.</td></tr>
-        <tr><td><strong>Technician</strong></td><td>Staf jaringan</td><td>Pemantauan, pengguna dan profil hotspot, voucher, laporan, backup, peringatan dan pengecekan, log audit. Tidak bisa menambah router atau mengelola akun dan pengaturan.</td></tr>
-        <tr><td><strong>Cashier</strong></td><td>Staf kasir</td><td>Menjual voucher, mengelola pengguna hotspot, melihat laporan dan pemantauan dasar. Tidak bisa mengubah profil, melihat backup, atau membuka pengaturan.</td></tr>
-        <tr><td><strong>Viewer</strong></td><td>Pemilik yang hanya memantau</td><td>Hanya baca: dasbor, pemantauan, pengguna, dan laporan. Tidak bisa mengubah apa pun.</td></tr>
+        <tr><td><strong>{{ __('Admin') }}</strong></td><td>Pemilik, manajer IT</td><td>Semuanya: router, pengaturan, akun, backup, log audit.</td></tr>
+        <tr><td><strong>{{ __('Technician') }}</strong></td><td>Staf jaringan</td><td>Pemantauan, pengguna dan profil hotspot, voucher, laporan, backup, peringatan dan pengecekan, log audit. Tidak bisa menambah router atau mengelola akun dan pengaturan.</td></tr>
+        <tr><td><strong>{{ __('Cashier') }}</strong></td><td>Staf kasir</td><td>Menjual voucher, mengelola pengguna hotspot, melihat laporan dan pemantauan dasar. Tidak bisa mengubah profil, melihat backup, atau membuka pengaturan.</td></tr>
+        <tr><td><strong>{{ __('Viewer') }}</strong></td><td>Pemilik yang hanya memantau</td><td>Hanya baca: dasbor, pemantauan, pengguna, dan laporan. Tidak bisa mengubah apa pun.</td></tr>
     </tbody>
 </table>
 <p>Menu yang tidak boleh Anda pakai disembunyikan. Jika Anda tetap membuka halaman itu lewat alamatnya, muncul pesan "tidak diizinkan".</p>

@@ -144,6 +144,8 @@
 
                 @isset($actions) <div class="flex items-center gap-2">{{ $actions }}</div> @endisset
 
+                <x-language-switcher />
+
                 <button type="button" class="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
                         @click="dark = !dark; document.documentElement.classList.toggle('dark', dark); try { localStorage.setItem('fluxmon-theme', dark ? 'dark' : 'light') } catch (e) {}"
                         title="{{ __('Toggle dark mode') }}">

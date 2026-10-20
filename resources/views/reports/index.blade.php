@@ -27,7 +27,7 @@
             </select>
         </div>
         <button class="btn-primary">{{ __('Apply') }}</button>
-        <div class="muted ml-auto">{{ $from->format('d M Y') }} – {{ $to->format('d M Y') }}</div>
+        <div class="muted ml-auto">{{ $from->translatedFormat('d M Y') }} – {{ $to->translatedFormat('d M Y') }}</div>
     </form>
 
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -85,7 +85,7 @@
                         data: {labels, datasets: [{data: revenue, backgroundColor: '#0284c7', borderRadius: 6, maxBarThickness: 36}]},
                         options: {
                             plugins: {tooltip: {callbacks: {label: (c) => `${fmtMoney(c.parsed.y, currency)} · ${counts[c.dataIndex]} vouchers`}}},
-                            scales: {y: {beginAtZero: true, ticks: {callback: (v) => v.toLocaleString('id-ID')}}, x: {grid: {display: false}}},
+                            scales: {y: {beginAtZero: true, ticks: {callback: (v) => v.toLocaleString(document.documentElement.lang === 'id' ? 'id-ID' : 'en-US')}}, x: {grid: {display: false}}},
                         },
                     });
                 },

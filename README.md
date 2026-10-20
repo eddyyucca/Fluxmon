@@ -36,7 +36,8 @@ Fluxmon is developed by [PT Fluxa Tritama Indonesia](https://fluxa.co.id) (*Ever
 - Multiple routers in one dashboard; credentials stored encrypted
 - Roles (admin, technician, cashier, viewer) and per-router access limits
 - Audit log of every change, with the admin who made it
-- Dark mode, English and Bahasa Indonesia
+- Two languages, English and Bahasa Indonesia, switchable by each person with the **EN | ID** button (also on the sign-in page): interface, user guide, dates, number formats and validation messages. Background alerts and the daily report use an admin-chosen default language
+- Dark mode
 - Daily sales report on Telegram
 
 ## Requirements
@@ -191,7 +192,7 @@ Issues and pull requests are welcome.
 
 1. Fork, create a branch, make your change.
 2. Add or update tests; `php artisan test` must pass.
-3. Keep user-facing strings in `__('...')` and add the Indonesian translation to `lang/id.json` when you can.
+3. Keep user-facing strings in `__('...')` and add the Indonesian translation to `lang/id.json`. Framework messages (validation, sign-in, pagination) live in `lang/id/*.php`. A test fails if a string in the app has no Indonesian translation or loses a `:placeholder`. To add another language, add it to `SetLocale::SUPPORTED`, create `lang/<code>.json` and `lang/<code>/`, and the `resources/views/docs/<code>/` pages (English is used for any missing page).
 4. The user guide lives in `resources/views/docs/{en,id}/`. When you change how a feature works, update its page in both languages (tests check that every page exists in both, and that titles are translated). In the Indonesian pages take screen labels from `__('...')` so the guide matches the interface.
 5. When reporting a bug, include your RouterOS version, board, and what the page or log shows.
 

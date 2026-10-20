@@ -5,8 +5,12 @@ import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
-/** Format a number as money using the Indonesian grouping Fluxmon defaults to. */
-window.fmtMoney = (n, currency = 'Rp') => `${currency} ${Math.round(n).toLocaleString('id-ID')}`.trim();
+/** Format a number as money with the separators of the interface language (1.000 in Indonesian, 1,000 in English). */
+window.fmtMoney = (n, currency = 'Rp') => {
+    const locale = document.documentElement.lang === 'id' ? 'id-ID' : 'en-US';
+
+    return `${currency} ${Math.round(n).toLocaleString(locale)}`.trim();
+};
 
 /** bits/s -> "1.2 Mbps" */
 window.fmtBits = (bps) => {

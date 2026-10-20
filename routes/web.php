@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocsController;
 use App\Http\Controllers\HotspotProfileController;
 use App\Http\Controllers\HotspotUserController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MonitorController;
 use App\Http\Controllers\ProfileController;
@@ -19,6 +20,9 @@ use App\Http\Controllers\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
+
+// Language switch: open to guests so the sign-in page can use it.
+Route::post('/locale', [LocaleController::class, 'update'])->name('locale');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

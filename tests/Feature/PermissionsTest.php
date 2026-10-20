@@ -97,7 +97,7 @@ class PermissionsTest extends FluxmonTestCase
         $this->assertStringContainsString('Office', $csv);
         $this->assertStringNotContainsString('Branch', $csv);
 
-        $this->actingAs($limited)->get('/reports?range=today')->assertSee('1.000')->assertDontSee('2.000');
+        $this->actingAs($limited)->get('/reports?range=today')->assertSee('1,000')->assertDontSee('2,000');
     }
 
     public function test_limited_account_cannot_manage_global_alert_rules(): void

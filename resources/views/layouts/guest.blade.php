@@ -66,6 +66,7 @@
 
             {{-- Form --}}
             <div class="flex min-h-screen flex-col px-6 py-8">
+                <div class="flex justify-end"><x-language-switcher /></div>
                 <div class="flex flex-1 items-center justify-center py-8">
                     <div class="w-full max-w-sm">
                         <div class="mb-8 flex items-center gap-2.5 lg:hidden">

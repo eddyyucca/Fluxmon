@@ -30,5 +30,5 @@
 </table>
 
 <div class="callout">
-    <strong>Tips:</strong> tombol bulan/matahari di bilah atas mengganti mode gelap, dan <em>{{ __('Settings') }} → {{ __('Language') }}</em> mengganti bahasa antarmuka antara Inggris dan Indonesia.
+    <strong>Tips:</strong> tombol bulan/matahari di bilah atas mengganti mode gelap, dan tombol <strong>EN | ID</strong> di sampingnya mengganti bahasa antara Inggris dan Indonesia. Pilihan Anda diingat untuk akun Anda.
 </div>

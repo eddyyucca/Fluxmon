@@ -28,8 +28,8 @@
                             @elseif ($v->status === 'used') <span class="badge-green">{{ __('Used') }}</span>
                             @else <span class="badge-amber">{{ __('Expired') }}</span> @endif
                         </td>
-                        <td class="text-slate-600 dark:text-slate-400">{{ $v->first_used_at?->format('d M Y H:i') ?? '—' }}</td>
-                        <td class="text-slate-600 dark:text-slate-400">{{ $v->expires_at?->format('d M Y H:i') ?? '—' }}</td>
+                        <td class="text-slate-600 dark:text-slate-400">{{ $v->first_used_at?->translatedFormat('d M Y H:i') ?? '—' }}</td>
+                        <td class="text-slate-600 dark:text-slate-400">{{ $v->expires_at?->translatedFormat('d M Y H:i') ?? '—' }}</td>
                     </tr>
                 @endforeach
             </tbody>

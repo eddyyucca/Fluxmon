@@ -86,8 +86,8 @@
 
                 label(t) {
                     const d = new Date(t * 1000);
-                    const time = d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-                    return ['1h', '6h', '24h'].includes(this.range) ? time : `${d.toLocaleDateString([], {day: '2-digit', month: 'short'})} ${time}`;
+                    const time = d.toLocaleTimeString(document.documentElement.lang, {hour: '2-digit', minute: '2-digit'});
+                    return ['1h', '6h', '24h'].includes(this.range) ? time : `${d.toLocaleDateString(document.documentElement.lang, {day: '2-digit', month: 'short'})} ${time}`;
                 },
 
                 fill(chart, series) {

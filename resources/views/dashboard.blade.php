@@ -123,7 +123,7 @@
                         data: {labels, datasets: [{data, backgroundColor: '#0284c7', borderRadius: 6, maxBarThickness: 28}]},
                         options: {
                             plugins: {tooltip: {callbacks: {label: (c) => fmtMoney(c.parsed.y, currency)}}},
-                            scales: {y: {beginAtZero: true, ticks: {callback: (v) => v.toLocaleString('id-ID')}}, x: {grid: {display: false}}},
+                            scales: {y: {beginAtZero: true, ticks: {callback: (v) => v.toLocaleString(document.documentElement.lang === 'id' ? 'id-ID' : 'en-US')}}, x: {grid: {display: false}}},
                         },
                     });
                 },

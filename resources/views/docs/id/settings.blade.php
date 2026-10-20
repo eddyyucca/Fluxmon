@@ -1,7 +1,8 @@
 <p><em>{{ __('Manage') }} → {{ __('Settings') }}</em> tersedia untuk admin.</p>
 
 <h2>{{ __('Language') }}</h2>
-<p>Pilih English atau Bahasa Indonesia. Berlaku untuk semua orang yang memakai Fluxmon ini, termasuk dokumentasi ini.</p>
+<p>Setiap orang memilih bahasanya sendiri dengan tombol <strong>EN | ID</strong> di bagian atas setiap halaman, termasuk halaman masuk. Pilihan itu mencakup seluruh antarmuka, dokumentasi ini, tanggal, format angka, dan pesan error. Orang yang sudah masuk mempertahankan pilihannya di semua perangkat.</p>
+<p><strong>{{ __('Default language') }}</strong> (di Pengaturan ini) dipakai untuk siapa pun yang belum memilih, dan untuk pesan yang dikirim Fluxmon sendiri seperti peringatan Telegram, peringatan email, dan laporan harian, karena pesan itu tidak terikat pada browser seseorang.</p>
 
 <h2>Telegram</h2>
 <p>Telegram mengirim laporan penjualan harian dan peringatan Anda ke sebuah chat atau grup.</p>

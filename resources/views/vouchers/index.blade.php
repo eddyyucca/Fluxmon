@@ -75,7 +75,7 @@
                                 <a href="{{ route('r.vouchers.show', [$router, $b]) }}" class="font-medium text-slate-900 hover:text-indigo-600 dark:text-white dark:hover:text-cyan-400">{{ $b->profile }}</a>
                                 <div class="text-xs text-slate-500">{{ $b->quantity }} × {{ \App\Support\Fmt::money($b->price, $router->currency) }}</div>
                             </td>
-                            <td class="whitespace-nowrap text-slate-600 dark:text-slate-400">{{ $b->created_at->format('d M Y H:i') }}</td>
+                            <td class="whitespace-nowrap text-slate-600 dark:text-slate-400">{{ $b->created_at->translatedFormat('d M Y H:i') }}</td>
                             <td><span class="badge-gray">{{ $b->unused_count }}</span></td>
                             <td><span class="badge-green">{{ $b->used_count + $b->expired_count }}</span></td>
                             <td class="whitespace-nowrap">{{ \App\Support\Fmt::money($b->revenue ?? 0, $router->currency) }}</td>

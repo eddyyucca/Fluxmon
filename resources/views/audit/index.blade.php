@@ -7,7 +7,7 @@
             <tbody>
                 @forelse ($logs as $log)
                     <tr>
-                        <td class="whitespace-nowrap text-slate-600 dark:text-slate-400" title="{{ $log->created_at }}">{{ $log->created_at->format('d M H:i') }}</td>
+                        <td class="whitespace-nowrap text-slate-600 dark:text-slate-400" title="{{ $log->created_at }}">{{ $log->created_at->translatedFormat('d M H:i') }}</td>
                         <td>{{ $log->user?->name ?? '—' }}</td>
                         <td><span class="badge-indigo">{{ $log->action }}</span></td>
                         <td>{{ $log->router?->name ?? '—' }}</td>

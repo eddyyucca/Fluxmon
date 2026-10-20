@@ -30,8 +30,8 @@
         <form method="POST" action="{{ route('settings.locale') }}" class="card card-pad flex flex-wrap items-end gap-3">
             @csrf @method('PUT')
             <div class="flex-1">
-                <h3 class="card-title">{{ __('Language') }}</h3>
-                <p class="muted mt-1">{{ __('Applies to everyone using this Fluxmon.') }}</p>
+                <h3 class="card-title">{{ __('Default language') }}</h3>
+                <p class="muted mt-1">{{ __('Used for anyone who has not chosen their own with the EN / ID switch at the top of the page.') }}</p>
             </div>
             <select name="locale" class="input !w-52">
                 @foreach ($locales as $code => $name) <option value="{{ $code }}" @selected($locale === $code)>{{ $name }}</option> @endforeach
@@ -108,7 +108,7 @@
                         </div>
                         <div class="sm:col-span-3">
                             <select name="role" x-model="role" class="input" @disabled($self)>
-                                @foreach ($roles as $r) <option value="{{ $r }}">{{ ucfirst($r) }}</option> @endforeach
+                                @foreach ($roles as $r) <option value="{{ $r }}">{{ __(ucfirst($r)) }}</option> @endforeach
                             </select>
                             <p class="mt-1 text-xs text-slate-500" x-text="@js($roleHelp)[role]"></p>
                         </div>
@@ -142,7 +142,7 @@
                 <input type="email" name="email" placeholder="{{ __('Email') }}" value="{{ old('email') }}" class="input" required>
                 <input type="password" name="password" placeholder="{{ __('Password') }}" class="input" required autocomplete="new-password">
                 <select name="role" x-model="role" class="input">
-                    @foreach ($roles as $r) <option value="{{ $r }}">{{ ucfirst($r) }}</option> @endforeach
+                    @foreach ($roles as $r) <option value="{{ $r }}">{{ __(ucfirst($r)) }}</option> @endforeach
                 </select>
                 <button class="btn-primary">{{ __('Add account') }}</button>
 

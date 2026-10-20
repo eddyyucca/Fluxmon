@@ -42,7 +42,7 @@ class SettingsController extends Controller
         $data = $request->validate(['locale' => ['required', Rule::in(array_keys(SetLocale::SUPPORTED))]]);
         Setting::write('locale', $data['locale']);
 
-        return back()->with('status', __('Language saved.'));
+        return back()->with('status', __('Default language saved.'));
     }
 
     public function updateTelegram(Request $request): RedirectResponse
@@ -68,7 +68,7 @@ class SettingsController extends Controller
 
     public function testTelegram(Telegram $telegram): RedirectResponse
     {
-        $error = $telegram->send('✅ Fluxmon test message');
+        $error = $telegram->send(__('✅ Fluxmon test message'));
 
         return $error ? back()->with('error', $error) : back()->with('status', __('Test message sent.'));
     }
@@ -96,7 +96,7 @@ class SettingsController extends Controller
 
     public function testNotifications(Notifier $notifier): RedirectResponse
     {
-        $notifier->send('✅ Fluxmon test alert', 'If you can read this, alerts reach this channel.');
+        $notifier->send(__('✅ Fluxmon test alert'), __('If you can read this, alerts reach this channel.'));
 
         return back()->with('status', __('Test alert sent to every configured channel.'));
     }

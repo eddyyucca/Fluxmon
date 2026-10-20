@@ -13,8 +13,8 @@
                         <div class="min-w-0 flex-1">
                             <div class="text-slate-900 dark:text-slate-100">{{ $e->title }}</div>
                             <div class="text-xs text-slate-500">
-                                {{ $e->started_at->format('d M H:i') }}
-                                @if ($e->resolved_at) → {{ $e->resolved_at->format('d M H:i') }} ({{ $e->started_at->diffForHumans($e->resolved_at, true) }}) @endif
+                                {{ $e->started_at->translatedFormat('d M H:i') }}
+                                @if ($e->resolved_at) → {{ $e->resolved_at->translatedFormat('d M H:i') }} ({{ $e->started_at->diffForHumans($e->resolved_at, true) }}) @endif
                                 @if ($e->value !== null) · {{ __('value') }} {{ round($e->value, 1) }} @endif
                             </div>
                         </div>

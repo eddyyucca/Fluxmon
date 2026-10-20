@@ -1,7 +1,8 @@
 <p><em>Manage → Settings</em> is available to admins.</p>
 
 <h2>Language</h2>
-<p>Choose English or Bahasa Indonesia. It applies to everyone who uses this Fluxmon, including this documentation.</p>
+<p>Everyone chooses their own language with the <strong>EN | ID</strong> switch at the top of every page, including the sign-in page. It covers the whole interface, this documentation, dates, number formats and error messages. Signed-in people keep their choice on every device.</p>
+<p><strong>Default language</strong> (here in Settings) is used for anyone who has not chosen yet, and for messages Fluxmon sends by itself, such as Telegram alerts, email alerts and the daily report, because those are not tied to a person's browser.</p>
 
 <h2>Telegram</h2>
 <p>Telegram delivers the daily sales report and your alerts to a chat or group.</p>

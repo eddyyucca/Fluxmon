@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">{{ __('Backup') }} #{{ $backup->id }} <span class="text-sm font-normal text-slate-500">· {{ $backup->created_at->format('d M Y H:i') }}</span></x-slot>
+    <x-slot name="header">{{ __('Backup') }} #{{ $backup->id }} <span class="text-sm font-normal text-slate-500">· {{ $backup->created_at->translatedFormat('d M Y H:i') }}</span></x-slot>
     <x-slot name="actions">
         <a href="{{ route('r.backups.download', [$router, $backup]) }}" class="btn-secondary btn-sm"><x-icon name="download" class="h-4 w-4" /> .rsc</a>
         <a href="{{ route('r.backups', $router) }}" class="btn-ghost btn-sm">{{ __('All backups') }}</a>
@@ -10,7 +10,7 @@
         <select name="against" class="input !w-56" onchange="this.form.submit()">
             @unless ($against) <option value="">{{ __('— nothing, this is the first —') }}</option> @endunless
             @foreach ($others as $o)
-                <option value="{{ $o->id }}" @selected($against?->id === $o->id)>#{{ $o->id }} · {{ $o->created_at->format('d M Y H:i') }}</option>
+                <option value="{{ $o->id }}" @selected($against?->id === $o->id)>#{{ $o->id }} · {{ $o->created_at->translatedFormat('d M Y H:i') }}</option>
             @endforeach
         </select>
     </form>

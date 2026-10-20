@@ -38,7 +38,7 @@ class ReportService
         $daily = ['labels' => [], 'revenue' => [], 'count' => []];
         foreach (CarbonPeriod::create($from->copy()->startOfDay(), $to->copy()->startOfDay()) as $day) {
             $row = $perDay->get($day->toDateString());
-            $daily['labels'][] = $day->format('d M');
+            $daily['labels'][] = $day->translatedFormat('d M');
             $daily['revenue'][] = (float) ($row->revenue ?? 0);
             $daily['count'][] = (int) ($row->n ?? 0);
         }

@@ -29,5 +29,5 @@
 </table>
 
 <div class="callout">
-    <strong>Tip:</strong> the moon/sun button in the top bar switches dark mode, and <em>Settings → Language</em> switches the interface between English and Bahasa Indonesia.
+    <strong>Tip:</strong> the moon/sun button in the top bar switches dark mode, and the <strong>EN | ID</strong> switch next to it changes the language between English and Bahasa Indonesia. Your choice is remembered for your account.
 </div>
